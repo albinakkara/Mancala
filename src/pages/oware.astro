@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { GamePage } from '../components/GamePage';
+---
+
+<Layout
+  title="Play Oware / Awale Online — West African Mancala | Online Mancala"
+  description="Play Oware / Awale, the traditional West African Mancala variant, online for free. Harvest 2 or 3 seeds, follow Feed and Grand Slam rules on a 12-pit board."
+>
+  <GamePage client:load initialVariant="oware" />
+</Layout>

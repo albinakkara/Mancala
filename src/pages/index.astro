@@ -1,11 +1,170 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { MainApp } from '../components/MainApp';
+import { VariantCard } from '../components/VariantCard';
+import { Footer } from '../components/Footer';
+import { Navbar } from '../components/Navbar';
+import { Sparkles, Play, Shield, Repeat, ArrowRight, Zap, Check } from 'lucide-react';
 ---
 
 <Layout
   title="Online Mancala — Play Kalah, Avalanche & Oware Free"
   description="Play Online Mancala at onlinemancala.com. Choose Kalah, Avalanche Mancala, or Oware / Awale with 3 AI difficulties (Easy, Medium, Hard) or 2-player pass & play."
 >
-  <MainApp client:load />
+  <div class="flex flex-col min-h-screen bg-white">
+    <Navbar />
+
+    <!-- HERO SECTION with Vercel Mesh Accent -->
+    <section class="relative overflow-hidden border-b border-[#ebebeb] bg-gradient-to-b from-[#fafafa] via-white to-white py-16 sm:py-24">
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-48 pointer-events-none opacity-20 blur-3xl">
+        <div class="h-full w-full bg-gradient-to-r from-[#007cf0] via-[#7928ca] to-[#ff0080]" />
+      </div>
+
+      <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-2 rounded-full border border-[#ebebeb] bg-white px-3 py-1 shadow-sm mb-6">
+          <span class="h-2 w-2 rounded-full bg-[#0070f3] animate-pulse" />
+          <span class="font-mono-code text-xs font-medium text-[#171717]">
+            onlinemancala.com — Play Free Online
+          </span>
+        </div>
+
+        <!-- Heading -->
+        <h1 class="text-4xl sm:text-6xl font-bold tracking-tight text-[#171717] max-w-4xl mx-auto leading-tight sm:leading-none">
+          The Ancient Game of Strategy, Reimagined for the Modern Web.
+        </h1>
+
+        <p class="mt-4 text-base sm:text-lg text-[#4d4d4d] max-w-2xl mx-auto">
+          Play <strong>Kalah</strong>, <strong>Avalanche Mancala</strong>, or <strong>Oware / Awale</strong> against intelligent AI algorithms (Easy, Medium, Hard) or challenge a friend in 2-player pass & play mode.
+        </p>
+
+        <!-- CTA Button -->
+        <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a
+            href="/play"
+            class="inline-flex items-center gap-2 rounded-lg bg-[#171717] px-6 py-3 text-sm font-medium text-white hover:bg-black transition-all shadow-sm active:scale-98"
+          >
+            <Play class="h-4 w-4" />
+            Play Now
+          </a>
+          <a
+            href="/rules"
+            class="inline-flex items-center gap-2 rounded-lg border border-[#ebebeb] bg-white px-6 py-3 text-sm font-medium text-[#171717] hover:bg-[#f5f5f5] transition"
+          >
+            Learn the Rules
+          </a>
+        </div>
+
+        <!-- Features Highlights -->
+        <div class="mt-10 flex flex-wrap items-center justify-center gap-6 text-xs text-[#666] font-mono-code">
+          <div class="flex items-center gap-1.5">
+            <Check class="h-4 w-4 text-[#0070f3]" />
+            3 Mancala Game Variants
+          </div>
+          <div class="flex items-center gap-1.5">
+            <Check class="h-4 w-4 text-[#7928ca]" />
+            3 CPU AI Difficulties
+          </div>
+          <div class="flex items-center gap-1.5">
+            <Check class="h-4 w-4 text-[#eb367f]" />
+            Pass & Play 2-Player
+          </div>
+          <div class="flex items-center gap-1.5">
+            <Check class="h-4 w-4 text-[#00dfd8]" />
+            No Registration Required
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHOOSE MANCALA VARIANT SECTION -->
+    <section class="py-12 bg-white border-b border-[#ebebeb]">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="mb-8 text-center">
+          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-[#171717]">
+            Choose Your Mancala Variant
+          </h2>
+          <p class="mt-1 text-sm text-[#888888]">
+            Select one of the 3 classic variants to start your match.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <VariantCard
+            id="kalah"
+            title="Kalah"
+            subtitle="Standard International Rules"
+            description="The most popular Mancala variant. Fill side stores, score extra turns when landing in your store, and capture opposite pits!"
+            badge="Classic Kalaha"
+            keyRule="Extra turns on store landing + opposite pit captures."
+            isActive={false}
+            onSelect={() => {}}
+          />
+
+          <VariantCard
+            id="avalanche"
+            title="Avalanche Mancala"
+            subtitle="Continuous Multi-Lap Sowing"
+            description="Fast-paced continuous sowing. If your last seed lands in a non-empty pit, pick up ALL seeds and keep sowing!"
+            badge="Multi-Lap Sowing"
+            keyRule="Continuous laps until landing in an empty pit or store."
+            isActive={false}
+            onSelect={() => {}}
+          />
+
+          <VariantCard
+            id="oware"
+            title="Oware / Awale"
+            subtitle="Traditional West African Game"
+            description="Strategic 12-pit board without side stores. Harvest opponent pits containing 2 or 3 seeds with Feed and Grand Slam rules!"
+            badge="West African Awale"
+            keyRule="Harvest 2/3 seeds, enforced Feed & Grand Slam protection."
+            isActive={false}
+            onSelect={() => {}}
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- QUICK LINKS SECTION -->
+    <section class="py-12 bg-[#fafafa] border-b border-[#ebebeb]">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <a
+            href="/play"
+            class="group flex flex-col items-center text-center rounded-xl border border-[#ebebeb] bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          >
+            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-[#0070f3]/10 mb-4">
+              <Play class="h-6 w-6 text-[#0070f3]" />
+            </div>
+            <h3 class="text-lg font-semibold text-[#171717] mb-2 group-hover:text-black transition">Play Mancala</h3>
+            <p class="text-sm text-[#888888]">Jump straight into the game. Choose your variant and start playing against AI or a friend.</p>
+          </a>
+
+          <a
+            href="/rules"
+            class="group flex flex-col items-center text-center rounded-xl border border-[#ebebeb] bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          >
+            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-[#7928ca]/10 mb-4">
+              <Shield class="h-6 w-6 text-[#7928ca]" />
+            </div>
+            <h3 class="text-lg font-semibold text-[#171717] mb-2 group-hover:text-black transition">Rules & Strategy</h3>
+            <p class="text-sm text-[#888888]">Learn the rules for all three variants and master advanced strategies to improve your game.</p>
+          </a>
+
+          <a
+            href="/stats"
+            class="group flex flex-col items-center text-center rounded-xl border border-[#ebebeb] bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          >
+            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-[#eb367f]/10 mb-4">
+              <Repeat class="h-6 w-6 text-[#eb367f]" />
+            </div>
+            <h3 class="text-lg font-semibold text-[#171717] mb-2 group-hover:text-black transition">Statistics</h3>
+            <p class="text-sm text-[#888888]">Track your win rates, total games, and performance across all Mancala variants.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <Footer />
+  </div>
 </Layout>

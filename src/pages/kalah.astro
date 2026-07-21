@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { GamePage } from '../components/GamePage';
+---
+
+<Layout
+  title="Play Kalah Mancala Online — Standard International Rules | Online Mancala"
+  description="Play Kalah, the most popular Mancala variant, online for free. Sow seeds counter-clockwise, capture opposite pits, and score extra turns on store landings."
+>
+  <GamePage client:load initialVariant="kalah" />
+</Layout>

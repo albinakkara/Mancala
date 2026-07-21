@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { StatsContent } from '../components/StatsContent';
+---
+
+<Layout
+  title="Mancala Player Statistics — Win Rates & Game History | Online Mancala"
+  description="View your Mancala statistics across all variants. Track win rates, total games, and performance for Kalah, Avalanche Mancala, and Oware / Awale."
+>
+  <StatsContent client:load />
+</Layout>

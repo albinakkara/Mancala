@@ -1,28 +1,36 @@
-import React, { useState } from 'react';
-import { Volume2, VolumeX, HelpCircle, Trophy, Sparkles, RefreshCw } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Volume2, VolumeX, HelpCircle, Trophy, Sparkles, RefreshCw, Home, Play } from 'lucide-react';
 import { soundFx } from '../lib/sound';
 
 interface NavbarProps {
-  currentVariant: string;
-  onSelectVariant: (variant: 'kalah' | 'avalanche' | 'oware') => void;
-  onOpenRules: () => void;
-  onOpenStats: () => void;
+  currentVariant?: string;
+  onOpenRules?: () => void;
+  onOpenStats?: () => void;
   onResetGame?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
-  currentVariant,
-  onSelectVariant,
+  currentVariant = 'kalah',
   onOpenRules,
   onOpenStats,
   onResetGame,
 }) => {
   const [isMuted, setIsMuted] = useState(soundFx.getMuted());
 
+  useEffect(() => {
+    const handleStorage = () => {
+      setIsMuted(soundFx.getMuted());
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
   const handleToggleSound = () => {
     const muted = soundFx.toggleMute();
     setIsMuted(muted);
   };
+
+  const isPlayPage = typeof window !== 'undefined' && window.location.pathname.startsWith('/play');
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-[#ebebeb] bg-white/80 backdrop-blur-md transition-all">
@@ -44,30 +52,32 @@ export const Navbar: React.FC<NavbarProps> = ({
           </a>
         </div>
 
-        {/* Middle: Variant Pills */}
-        <nav className="hidden md:flex items-center gap-1 rounded-full border border-[#ebebeb] bg-[#fafafa] p-1">
-          {(['kalah', 'avalanche', 'oware'] as const).map((variant) => {
-            const isActive = currentVariant === variant;
-            const labels = {
-              kalah: 'Kalah',
-              avalanche: 'Avalanche',
-              oware: 'Oware / Awale',
-            };
-            return (
-              <button
-                key={variant}
-                onClick={() => onSelectVariant(variant)}
-                className={`rounded-full px-3.5 py-1 text-xs font-medium transition-all ${
-                  isActive
-                    ? 'bg-black text-white shadow-sm'
-                    : 'text-[#4d4d4d] hover:text-black hover:bg-black/5'
-                }`}
-              >
-                {labels[variant]}
-              </button>
-            );
-          })}
-        </nav>
+        {/* Middle: Variant Pills (only on play pages) */}
+        {isPlayPage && (
+          <nav className="hidden md:flex items-center gap-1 rounded-full border border-[#ebebeb] bg-[#fafafa] p-1">
+            {(['kalah', 'avalanche', 'oware'] as const).map((variant) => {
+              const isActive = currentVariant === variant;
+              const labels = {
+                kalah: 'Kalah',
+                avalanche: 'Avalanche',
+                oware: 'Oware / Awale',
+              };
+              return (
+                <a
+                  key={variant}
+                  href={`/${variant}`}
+                  className={`rounded-full px-3.5 py-1 text-xs font-medium transition-all ${
+                    isActive
+                      ? 'bg-black text-white shadow-sm'
+                      : 'text-[#4d4d4d] hover:text-black hover:bg-black/5'
+                  }`}
+                >
+                  {labels[variant]}
+                </a>
+              );
+            })}
+          </nav>
+        )}
 
         {/* Right: Actions */}
         <div className="flex items-center gap-2">
@@ -82,23 +92,23 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          <button
-            onClick={onOpenRules}
+          <a
+            href="/rules"
             title="How to Play / Rules"
             className="flex h-9 items-center gap-1.5 rounded-md border border-[#ebebeb] bg-white px-2.5 text-xs font-medium text-[#171717] hover:bg-[#f5f5f5] transition"
           >
             <HelpCircle className="h-4 w-4 text-[#666]" />
             <span className="hidden sm:inline">Rules</span>
-          </button>
+          </a>
 
-          <button
-            onClick={onOpenStats}
+          <a
+            href="/stats"
             title="Statistics"
             className="flex h-9 items-center gap-1.5 rounded-md border border-[#ebebeb] bg-white px-2.5 text-xs font-medium text-[#171717] hover:bg-[#f5f5f5] transition"
           >
             <Trophy className="h-4 w-4 text-[#666]" />
             <span className="hidden sm:inline">Stats</span>
-          </button>
+          </a>
 
           <button
             onClick={handleToggleSound}

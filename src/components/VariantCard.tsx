@@ -9,8 +9,8 @@ interface VariantCardProps {
   description: string;
   badge: string;
   keyRule: string;
-  isActive: boolean;
-  onSelect: (variant: GameVariant) => void;
+  isActive?: boolean;
+  href?: string;
 }
 
 export const VariantCard: React.FC<VariantCardProps> = ({
@@ -20,8 +20,8 @@ export const VariantCard: React.FC<VariantCardProps> = ({
   description,
   badge,
   keyRule,
-  isActive,
-  onSelect,
+  isActive = false,
+  href,
 }) => {
   const getIcon = () => {
     switch (id) {
@@ -45,9 +45,11 @@ export const VariantCard: React.FC<VariantCardProps> = ({
     }
   };
 
+  const cardHref = href || `/${id}`;
+
   return (
-    <div
-      onClick={() => onSelect(id)}
+    <a
+      href={cardHref}
       className={`group relative flex flex-col justify-between rounded-xl border bg-white p-6 transition-all duration-300 hover:-translate-y-1 cursor-pointer ${getGradientBorder()} ${
         isActive
           ? 'border-black ring-2 ring-black shadow-lg scale-102'
@@ -121,17 +123,11 @@ export const VariantCard: React.FC<VariantCardProps> = ({
           <span className="h-1.5 w-1.5 rounded-full bg-[#171717] group-hover:scale-125 transition-transform" />
           {keyRule}
         </p>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onSelect(id);
-          }}
-          className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#171717] py-2.5 text-xs font-medium text-white hover:bg-black transition-all shadow-sm active:scale-98"
-        >
+        <div className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#171717] py-2.5 text-xs font-medium text-white hover:bg-black transition-all shadow-sm">
           <span>Play {title}</span>
           <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
-        </button>
+        </div>
       </div>
-    </div>
+    </a>
   );
 };

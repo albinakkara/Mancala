@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { GamePage } from '../components/GamePage';
+---
+
+<Layout
+  title="Play Avalanche Mancala Online — Continuous Multi-Lap Sowing | Online Mancala"
+  description="Play Avalanche Mancala online for free. Continuous multi-lap sowing — if your last seed lands in a non-empty pit, pick up ALL seeds and keep sowing!"
+>
+  <GamePage client:load initialVariant="avalanche" />
+</Layout>
