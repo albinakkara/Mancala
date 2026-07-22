@@ -227,18 +227,20 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
   const thinkingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // Clear any existing timer to avoid stale triggers
+    // Abort any in-progress CPU thinking whenever deps change (e.g. difficulty, variant switch)
     if (thinkingTimerRef.current) {
       clearTimeout(thinkingTimerRef.current);
       thinkingTimerRef.current = null;
     }
+    // Reset CPU thinking flag to unfreeze UI when settings change
+    setIsCpuThinking(false);
 
-    if (mode === 'pvc' && gameState.turn === 1 && !gameState.isGameOver && !isCpuThinking && !isSowing) {
+    if (mode === 'pvc' && gameState.turn === 1 && !gameState.isGameOver && !isSowing) {
       thinkingTimerRef.current = setTimeout(() => {
         if (!isMounted.current) return;
 
         // Guard: re-check conditions right before executing
-        if (gameState.isGameOver || isSowing || isCpuThinking) return;
+        if (gameState.isGameOver || isSowing) return;
 
         setIsCpuThinking(true);
         // Use a brief yield to let React commit the "thinking" UI state
@@ -260,7 +262,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
         thinkingTimerRef.current = null;
       }
     };
-  }, [gameState, mode, variant, difficulty, isCpuThinking, isSowing, executeAnimatedMove]);
+  }, [gameState, mode, variant, difficulty, isSowing, executeAnimatedMove]);
 
   const handlePitClick = (pitIndex: number) => {
     if (gameState.isGameOver || isCpuThinking || isSowing) return;
@@ -627,7 +629,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
                   <span className="text-[#666]">sowed Pit {record.pitIndex + 1}</span>
                 </div>
                 <div className="flex items-center gap-3 font-mono-code text-[11px]">
-                  {record.captured > 0 && (
+                  {record.captured > 0 && variant !== 'avalanche' && (
                     <span className="text-[#0070f3] font-semibold">
                       +{record.captured} Captured
                     </span>

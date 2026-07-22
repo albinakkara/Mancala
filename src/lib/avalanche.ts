@@ -37,6 +37,7 @@ export function makeAvalancheMove(state: BoardState, chosenPit: number): BoardSt
   const ownStore = currentTurn === 0 ? KALAH_P0_STORE : KALAH_P1_STORE;
 
   let handSeeds = newPits[chosenPit];
+  const originalHandSize = handSeeds;
   newPits[chosenPit] = 0;
 
   let currentPit = chosenPit;
@@ -105,8 +106,8 @@ export function makeAvalancheMove(state: BoardState, chosenPit: number): BoardSt
   const moveRecord: MoveRecord = {
     player: currentTurn,
     pitIndex: chosenPit,
-    seedsSown: totalSeedsSownInMove,
-    captured: totalLaps - 1, // count of extra laps initiated
+    seedsSown: originalHandSize,
+    captured: 0, // Avalanche has no capture mechanic
     extraTurn: extraTurnGranted,
     timestamp: timeStr,
   };

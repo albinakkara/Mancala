@@ -17,7 +17,11 @@ export function makeMoveForVariant(state: BoardState, variant: GameVariant, pit:
   return makeOwareMove(state, pit);
 }
 
-export function getBestCpuMove(state: BoardState, variant: GameVariant, difficulty: Difficulty): number | null {
+export function getBestCpuMove(
+  state: BoardState,
+  variant: GameVariant,
+  difficulty: Difficulty
+): number | null {
   const legalMoves = getLegalMovesForVariant(state, variant, CPU_PLAYER);
   if (legalMoves.length === 0) return null;
   if (legalMoves.length === 1) return legalMoves[0];
@@ -25,32 +29,14 @@ export function getBestCpuMove(state: BoardState, variant: GameVariant, difficul
   if (difficulty === 'easy') {
     return selectEasyMove(state, variant, legalMoves);
   } else if (difficulty === 'medium') {
-    return selectMinimaxMove(state, variant, 3);
+    return selectMinimaxMove(state, variant, 2);
   } else {
-    // Hard mode — use moderate depth with time-budgeted search to avoid freezing
-    const depth = variant === 'oware' ? 4 : 5;
-    return selectMinimaxMoveWithBudget(state, variant, depth);
+    // Hard mode — use conservative depths per variant to avoid freezing
+    // Avalanche has cascading loops making each node very expensive
+    // Oware has feed-rule overhead per node
+    const depth = variant === 'avalanche' ? 2 : variant === 'oware' ? 2 : 3;
+    return selectMinimaxMove(state, variant, depth);
   }
-}
-
-// Time-budgeted minimax: yields via requestAnimationFrame to keep UI responsive
-function selectMinimaxMoveWithBudget(state: BoardState, variant: GameVariant, depth: number): number {
-  const legalMoves = getLegalMovesForVariant(state, variant, CPU_PLAYER);
-  let bestMove = legalMoves[0];
-  let bestValue = -Infinity;
-
-  for (const move of legalMoves) {
-    const nextState = makeMoveForVariant(state, variant, move);
-    const currentDepth = nextState.turn === CPU_PLAYER && !nextState.isGameOver ? depth : depth - 1;
-    const value = minimax(nextState, variant, currentDepth, -Infinity, Infinity, nextState.turn === CPU_PLAYER);
-
-    if (value > bestValue) {
-      bestValue = value;
-      bestMove = move;
-    }
-  }
-
-  return bestMove;
 }
 
 function selectEasyMove(state: BoardState, variant: GameVariant, legalMoves: number[]): number {
@@ -80,8 +66,9 @@ function selectMinimaxMove(state: BoardState, variant: GameVariant, depth: numbe
 
   for (const move of legalMoves) {
     const nextState = makeMoveForVariant(state, variant, move);
-    // If move gives extra turn, search at same depth
-    const currentDepth = nextState.turn === CPU_PLAYER && !nextState.isGameOver ? depth : depth - 1;
+    // Always decrement depth by at least 1, even on extra turns,
+    // to prevent exponential blowup (especially for Avalanche cascades)
+    const currentDepth = depth - 1;
     const value = minimax(nextState, variant, currentDepth, -Infinity, Infinity, nextState.turn === CPU_PLAYER);
 
     if (value > bestValue) {
@@ -116,26 +103,26 @@ function minimax(
     let maxEval = -Infinity;
     for (const move of moves) {
       const nextState = makeMoveForVariant(state, variant, move);
-      const nextIsMax = nextState.turn === CPU_PLAYER;
-      const nextDepth = nextIsMax ? depth : depth - 1;
+      // Always decrement depth by at least 1, even on extra turns
+      const nextDepth = depth - 1;
 
-      const evalVal = minimax(nextState, variant, nextDepth, alpha, beta, nextIsMax);
+      const evalVal = minimax(nextState, variant, nextDepth, alpha, beta, nextState.turn === CPU_PLAYER);
       maxEval = Math.max(maxEval, evalVal);
       alpha = Math.max(alpha, evalVal);
-      if (beta <= alpha) break; // Alpha-Beta Cutoff
+      if (beta <= alpha) break;
     }
     return maxEval;
   } else {
     let minEval = Infinity;
     for (const move of moves) {
       const nextState = makeMoveForVariant(state, variant, move);
-      const nextIsMax = nextState.turn === CPU_PLAYER;
-      const nextDepth = !nextIsMax ? depth : depth - 1;
+      // Always decrement depth by at least 1, even on extra turns
+      const nextDepth = depth - 1;
 
-      const evalVal = minimax(nextState, variant, nextDepth, alpha, beta, nextIsMax);
+      const evalVal = minimax(nextState, variant, nextDepth, alpha, beta, nextState.turn === CPU_PLAYER);
       minEval = Math.min(minEval, evalVal);
       beta = Math.min(beta, evalVal);
-      if (beta <= alpha) break; // Alpha-Beta Cutoff
+      if (beta <= alpha) break;
     }
     return minEval;
   }
