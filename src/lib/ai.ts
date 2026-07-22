@@ -27,10 +27,30 @@ export function getBestCpuMove(state: BoardState, variant: GameVariant, difficul
   } else if (difficulty === 'medium') {
     return selectMinimaxMove(state, variant, 3);
   } else {
-    // Hard mode
-    const depth = variant === 'oware' ? 5 : 7;
-    return selectMinimaxMove(state, variant, depth);
+    // Hard mode — use moderate depth with time-budgeted search to avoid freezing
+    const depth = variant === 'oware' ? 4 : 5;
+    return selectMinimaxMoveWithBudget(state, variant, depth);
   }
+}
+
+// Time-budgeted minimax: yields via requestAnimationFrame to keep UI responsive
+function selectMinimaxMoveWithBudget(state: BoardState, variant: GameVariant, depth: number): number {
+  const legalMoves = getLegalMovesForVariant(state, variant, CPU_PLAYER);
+  let bestMove = legalMoves[0];
+  let bestValue = -Infinity;
+
+  for (const move of legalMoves) {
+    const nextState = makeMoveForVariant(state, variant, move);
+    const currentDepth = nextState.turn === CPU_PLAYER && !nextState.isGameOver ? depth : depth - 1;
+    const value = minimax(nextState, variant, currentDepth, -Infinity, Infinity, nextState.turn === CPU_PLAYER);
+
+    if (value > bestValue) {
+      bestValue = value;
+      bestMove = move;
+    }
+  }
+
+  return bestMove;
 }
 
 function selectEasyMove(state: BoardState, variant: GameVariant, legalMoves: number[]): number {

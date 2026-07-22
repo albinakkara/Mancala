@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import confetti from 'canvas-confetti';
-import { Cpu, Users, RotateCcw, Award, Play, AlertCircle, ArrowRight, Zap, CheckCircle2 } from 'lucide-react';
+import { Cpu, Users, RotateCcw, Play, AlertCircle, ArrowRight, Zap, CheckCircle2 } from 'lucide-react';
 import type { GameVariant, GameMode, Difficulty, BoardState, Player } from '../lib/types';
 import { createInitialKalahState, makeKalahMove, KALAH_P0_STORE, KALAH_P1_STORE } from '../lib/kalah';
 import { createInitialAvalancheState, makeAvalancheMove } from '../lib/avalanche';
 import { createInitialOwareState, makeOwareMove } from '../lib/oware';
 import { getBestCpuMove } from '../lib/ai';
 import { soundFx } from '../lib/sound';
+import { WinnerPopup } from './WinnerPopup';
 
 interface MancalaBoardProps {
   variant: GameVariant;
@@ -33,6 +34,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
   const [handCount, setHandCount] = useState<number>(0);
   const [hoveredPit, setHoveredPit] = useState<number | null>(null);
   const [droppingPit, setDroppingPit] = useState<number | null>(null);
+  const [showWinnerPopup, setShowWinnerPopup] = useState(false);
 
   const isMounted = useRef(true);
 
@@ -61,6 +63,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
     setActiveSowPit(null);
     setHandCount(0);
     setDroppingPit(null);
+    setShowWinnerPopup(false);
   }, [variant, firstPlayer, mode]);
 
   useEffect(() => {
@@ -75,6 +78,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
         spread: 80,
         origin: { y: 0.6 },
       });
+      setShowWinnerPopup(true);
       if (onGameEnd && finalState.winner !== null) {
         onGameEnd(finalState.winner, variant, mode, difficulty);
       }
@@ -219,22 +223,43 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
     [variant, isSowing, handleGameOver]
   );
 
-  // CPU turn trigger effect
-  useEffect(() => {
-    if (mode === 'pvc' && gameState.turn === 1 && !gameState.isGameOver && !isCpuThinking && !isSowing) {
-      const timer = setTimeout(() => {
-        if (!isMounted.current) return;
-        setIsCpuThinking(true);
-        const cpuMove = getBestCpuMove(gameState, variant, difficulty);
-        if (cpuMove !== null) {
-          executeAnimatedMove(cpuMove, gameState);
-        } else {
-          setIsCpuThinking(false);
-        }
-      }, 500);
+  // CPU turn trigger effect — defensive: guard against stale concurrent thinking
+  const thinkingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-      return () => clearTimeout(timer);
+  useEffect(() => {
+    // Clear any existing timer to avoid stale triggers
+    if (thinkingTimerRef.current) {
+      clearTimeout(thinkingTimerRef.current);
+      thinkingTimerRef.current = null;
     }
+
+    if (mode === 'pvc' && gameState.turn === 1 && !gameState.isGameOver && !isCpuThinking && !isSowing) {
+      thinkingTimerRef.current = setTimeout(() => {
+        if (!isMounted.current) return;
+
+        // Guard: re-check conditions right before executing
+        if (gameState.isGameOver || isSowing || isCpuThinking) return;
+
+        setIsCpuThinking(true);
+        // Use a brief yield to let React commit the "thinking" UI state
+        requestAnimationFrame(() => {
+          if (!isMounted.current) return;
+          const cpuMove = getBestCpuMove(gameState, variant, difficulty);
+          if (cpuMove !== null) {
+            executeAnimatedMove(cpuMove, gameState);
+          } else {
+            setIsCpuThinking(false);
+          }
+        });
+      }, 500);
+    }
+
+    return () => {
+      if (thinkingTimerRef.current) {
+        clearTimeout(thinkingTimerRef.current);
+        thinkingTimerRef.current = null;
+      }
+    };
   }, [gameState, mode, variant, difficulty, isCpuThinking, isSowing, executeAnimatedMove]);
 
   const handlePitClick = (pitIndex: number) => {
@@ -290,8 +315,8 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
             <button
               onClick={() => setMode('pvc')}
               className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${mode === 'pvc'
-                  ? 'bg-black text-white shadow-sm scale-102'
-                  : 'text-[#4d4d4d] hover:text-black'
+                ? 'bg-black text-white shadow-sm scale-102'
+                : 'text-[#4d4d4d] hover:text-black'
                 }`}
             >
               <Cpu className="h-3.5 w-3.5" />
@@ -300,8 +325,8 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
             <button
               onClick={() => setMode('pvp')}
               className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${mode === 'pvp'
-                  ? 'bg-black text-white shadow-sm scale-102'
-                  : 'text-[#4d4d4d] hover:text-black'
+                ? 'bg-black text-white shadow-sm scale-102'
+                : 'text-[#4d4d4d] hover:text-black'
                 }`}
             >
               <Users className="h-3.5 w-3.5" />
@@ -320,8 +345,8 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
                   key={diff}
                   onClick={() => setDifficulty(diff)}
                   className={`capitalize rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${difficulty === diff
-                      ? 'bg-black text-white shadow-sm scale-102'
-                      : 'text-[#4d4d4d] hover:text-black'
+                    ? 'bg-black text-white shadow-sm scale-102'
+                    : 'text-[#4d4d4d] hover:text-black'
                     }`}
                 >
                   {diff}
@@ -619,6 +644,16 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
           </div>
         )}
       </div>
+
+      {/* WINNER ANNOUNCEMENT POPUP */}
+      <WinnerPopup
+        isOpen={showWinnerPopup}
+        winner={gameState.winner}
+        scores={gameState.scores}
+        variant={variant}
+        mode={mode}
+        onNewGame={startNewGame}
+      />
     </div>
   );
 };
