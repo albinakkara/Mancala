@@ -11,6 +11,7 @@ interface VariantCardProps {
   keyRule: string;
   isActive?: boolean;
   href?: string;
+  onSelect?: (variant: GameVariant) => void;
 }
 
 export const VariantCard: React.FC<VariantCardProps> = ({
@@ -22,6 +23,7 @@ export const VariantCard: React.FC<VariantCardProps> = ({
   keyRule,
   isActive = false,
   href,
+  onSelect,
 }) => {
   const getIcon = () => {
     switch (id) {
@@ -50,6 +52,7 @@ export const VariantCard: React.FC<VariantCardProps> = ({
   return (
     <a
       href={cardHref}
+      onClick={onSelect ? (e) => { e.preventDefault(); onSelect(id); } : undefined}
       className={`group relative flex flex-col justify-between rounded-xl border bg-white p-6 transition-all duration-300 hover:-translate-y-1 cursor-pointer ${getGradientBorder()} ${
         isActive
           ? 'border-black ring-2 ring-black shadow-lg scale-102'

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Volume2, VolumeX, HelpCircle, Trophy, Sparkles, RefreshCw, Home, Play } from 'lucide-react';
 import { soundFx } from '../lib/sound';
+import type { GameVariant } from '../lib/types';
 
 interface NavbarProps {
   currentVariant?: string;
+  onSelectVariant?: (v: GameVariant) => void;
   onOpenRules?: () => void;
   onOpenStats?: () => void;
   onResetGame?: () => void;
@@ -11,6 +13,7 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({
   currentVariant = 'kalah',
+  onSelectVariant,
   onOpenRules,
   onOpenStats,
   onResetGame,
