@@ -55,6 +55,7 @@ export function makeKalahMove(state: BoardState, chosenPit: number): BoardState 
   }
 
   let capturedCount = 0;
+  let capturedPitsIndices: number[] = [];
   let getExtraTurn = false;
 
   // Check extra turn rule
@@ -66,6 +67,7 @@ export function makeKalahMove(state: BoardState, chosenPit: number): BoardState 
     const oppositePit = 12 - currentPit;
     if (newPits[oppositePit] > 0) {
       capturedCount = newPits[oppositePit] + 1;
+      capturedPitsIndices = [currentPit, oppositePit];
       newPits[ownStore] += capturedCount;
       newPits[oppositePit] = 0;
       newPits[currentPit] = 0;
@@ -107,6 +109,7 @@ export function makeKalahMove(state: BoardState, chosenPit: number): BoardState 
     pitIndex: chosenPit,
     seedsSown: state.pits[chosenPit],
     captured: capturedCount,
+    capturedPits: capturedCount > 0 ? capturedPitsIndices : undefined,
     extraTurn: getExtraTurn,
     timestamp: timeStr,
   };

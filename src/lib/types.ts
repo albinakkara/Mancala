@@ -8,6 +8,7 @@ export interface MoveRecord {
   pitIndex: number;
   seedsSown: number;
   captured: number;
+  capturedPits?: number[];
   extraTurn: boolean;
   timestamp: string;
 }

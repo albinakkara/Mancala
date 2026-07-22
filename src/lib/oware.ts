@@ -145,6 +145,7 @@ export function makeOwareMove(state: BoardState, chosenPit: number): BoardState 
     pitIndex: chosenPit,
     seedsSown: originalHandSeeds,
     captured: capturedCount,
+    capturedPits: capturedCount > 0 ? capturedPitsIndices : undefined,
     extraTurn: false,
     timestamp: timeStr,
   };
