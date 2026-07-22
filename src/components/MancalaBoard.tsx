@@ -222,9 +222,9 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
   // CPU turn trigger effect
   useEffect(() => {
     if (mode === 'pvc' && gameState.turn === 1 && !gameState.isGameOver && !isCpuThinking && !isSowing) {
-      setIsCpuThinking(true);
       const timer = setTimeout(() => {
         if (!isMounted.current) return;
+        setIsCpuThinking(true);
         const cpuMove = getBestCpuMove(gameState, variant, difficulty);
         if (cpuMove !== null) {
           executeAnimatedMove(cpuMove, gameState);
@@ -261,9 +261,8 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
         {seeds.map((_, i) => (
           <span
             key={i}
-            className={`h-2.5 w-2.5 rounded-full bg-[#171717] shadow-sm transition-all duration-300 ${
-              isPitActive ? 'bg-[#0070f3] scale-110' : ''
-            }`}
+            className={`h-2.5 w-2.5 rounded-full bg-[#171717] shadow-sm transition-all duration-300 ${isPitActive ? 'bg-[#0070f3] scale-110' : ''
+              }`}
             style={{
               transform: `scale(${1 - Math.min(i, 8) * 0.03})`,
             }}
@@ -290,22 +289,20 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
           <div className="inline-flex rounded-lg border border-[#ebebeb] bg-[#fafafa] p-0.5">
             <button
               onClick={() => setMode('pvc')}
-              className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
-                mode === 'pvc'
+              className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${mode === 'pvc'
                   ? 'bg-black text-white shadow-sm scale-102'
                   : 'text-[#4d4d4d] hover:text-black'
-              }`}
+                }`}
             >
               <Cpu className="h-3.5 w-3.5" />
               vs Computer
             </button>
             <button
               onClick={() => setMode('pvp')}
-              className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
-                mode === 'pvp'
+              className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${mode === 'pvp'
                   ? 'bg-black text-white shadow-sm scale-102'
                   : 'text-[#4d4d4d] hover:text-black'
-              }`}
+                }`}
             >
               <Users className="h-3.5 w-3.5" />
               2 Players
@@ -322,11 +319,10 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
                 <button
                   key={diff}
                   onClick={() => setDifficulty(diff)}
-                  className={`capitalize rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
-                    difficulty === diff
+                  className={`capitalize rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${difficulty === diff
                       ? 'bg-black text-white shadow-sm scale-102'
                       : 'text-[#4d4d4d] hover:text-black'
-                  }`}
+                    }`}
                 >
                   {diff}
                 </button>
@@ -346,14 +342,12 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
       </div>
 
       {/* Turn Banner & Game Status */}
-      <div className={`relative overflow-hidden rounded-xl border border-[#ebebeb] bg-white p-4 shadow-sm text-center transition-all duration-300 ${
-        gameState.extraTurn ? 'animate-extra-turn' : ''
-      }`}>
+      <div className={`relative overflow-hidden rounded-xl border border-[#ebebeb] bg-white p-4 shadow-sm text-center transition-all duration-300 ${gameState.extraTurn ? 'animate-extra-turn' : ''
+        }`}>
         <div className="flex items-center justify-between px-2">
           {/* Player 1 Card */}
-          <div className={`flex items-center gap-2 rounded-lg px-3 py-1.5 transition-all duration-300 ${
-            gameState.turn === 0 && !gameState.isGameOver ? 'bg-black text-white font-semibold scale-102 shadow-md' : 'text-[#666]'
-          }`}>
+          <div className={`flex items-center gap-2 rounded-lg px-3 py-1.5 transition-all duration-300 ${gameState.turn === 0 && !gameState.isGameOver ? 'bg-black text-white font-semibold scale-102 shadow-md' : 'text-[#666]'
+            }`}>
             <span className="h-2 w-2 rounded-full bg-[#0070f3] animate-pulse" />
             <span className="text-xs font-medium">Player 1 (Bottom)</span>
             <span className="font-mono-code text-xs ml-2 animate-score-bump">Score: {gameState.scores[0]}</span>
@@ -386,9 +380,8 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
           </div>
 
           {/* Player 2 / CPU Card */}
-          <div className={`flex items-center gap-2 rounded-lg px-3 py-1.5 transition-all duration-300 ${
-            gameState.turn === 1 && !gameState.isGameOver ? 'bg-black text-white font-semibold scale-102 shadow-md' : 'text-[#666]'
-          }`}>
+          <div className={`flex items-center gap-2 rounded-lg px-3 py-1.5 transition-all duration-300 ${gameState.turn === 1 && !gameState.isGameOver ? 'bg-black text-white font-semibold scale-102 shadow-md' : 'text-[#666]'
+            }`}>
             <span className="h-2 w-2 rounded-full bg-[#eb367f] animate-pulse" />
             <span className="text-xs font-medium">{mode === 'pvc' ? `CPU (${difficulty})` : 'Player 2 (Top)'}</span>
             <span className="font-mono-code text-xs ml-2 animate-score-bump">Score: {gameState.scores[1]}</span>
@@ -402,9 +395,8 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
           /* KALAH & AVALANCHE BOARD LAYOUT (14 Pits + Stores) */
           <div className="grid grid-cols-8 gap-3 items-center">
             {/* Player 2 / CPU Store (Pit 13) */}
-            <div className={`col-span-1 flex flex-col items-center justify-center h-56 rounded-2xl border-2 bg-white p-2 shadow-inner transition-all duration-300 ${
-              gameState.lastSownPit === 13 ? 'border-[#eb367f] animate-pit-glow shadow-lg bg-[#fff0f5]' : 'border-[#ebebeb]'
-            }`}>
+            <div className={`col-span-1 flex flex-col items-center justify-center h-56 rounded-2xl border-2 bg-white p-2 shadow-inner transition-all duration-300 ${gameState.lastSownPit === 13 ? 'border-[#eb367f] animate-pit-glow shadow-lg bg-[#fff0f5]' : 'border-[#ebebeb]'
+              }`}>
               <span className="font-mono-code text-[10px] text-[#888888] mb-1">
                 {mode === 'pvc' ? 'CPU STORE' : 'P2 STORE'}
               </span>
@@ -434,9 +426,8 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
                       onClick={() => handlePitClick(pitIdx)}
                       onMouseEnter={() => setHoveredPit(pitIdx)}
                       onMouseLeave={() => setHoveredPit(null)}
-                      className={`relative flex flex-col items-center justify-between h-24 rounded-xl border bg-white p-2 transition-all duration-200 ${
-                        canClick ? 'hover:border-black hover:-translate-y-1 hover:shadow-md active:scale-95 cursor-pointer' : 'cursor-default'
-                      } ${isPitActive ? 'border-[#7928ca] animate-pit-glow bg-[#f8f5ff] scale-105 shadow-md' : ''}`}
+                      className={`relative flex flex-col items-center justify-between h-24 rounded-xl border bg-white p-2 transition-all duration-200 ${canClick ? 'hover:border-black hover:-translate-y-1 hover:shadow-md active:scale-95 cursor-pointer' : 'cursor-default'
+                        } ${isPitActive ? 'border-[#7928ca] animate-pit-glow bg-[#f8f5ff] scale-105 shadow-md' : ''}`}
                     >
                       <span className="font-mono-code text-[10px] text-[#888888]">Pit {pitIdx}</span>
                       <div className="my-auto flex items-center justify-center">
@@ -466,9 +457,8 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
                       onClick={() => handlePitClick(pitIdx)}
                       onMouseEnter={() => setHoveredPit(pitIdx)}
                       onMouseLeave={() => setHoveredPit(null)}
-                      className={`relative flex flex-col items-center justify-between h-24 rounded-xl border bg-white p-2 transition-all duration-200 ${
-                        canClick ? 'hover:border-[#0070f3] hover:-translate-y-1 hover:shadow-md active:scale-95 cursor-pointer border-[#0070f3]/40' : 'cursor-default'
-                      } ${isPitActive ? 'border-[#0070f3] animate-pit-glow bg-[#eef6ff] scale-105 shadow-md' : ''}`}
+                      className={`relative flex flex-col items-center justify-between h-24 rounded-xl border bg-white p-2 transition-all duration-200 ${canClick ? 'hover:border-[#0070f3] hover:-translate-y-1 hover:shadow-md active:scale-95 cursor-pointer border-[#0070f3]/40' : 'cursor-default'
+                        } ${isPitActive ? 'border-[#0070f3] animate-pit-glow bg-[#eef6ff] scale-105 shadow-md' : ''}`}
                     >
                       <span className="font-mono-code text-[10px] text-[#0070f3]">Pit {pitIdx + 1}</span>
                       <div className="my-auto flex items-center justify-center">
@@ -484,9 +474,8 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
             </div>
 
             {/* Player 1 Store (Pit 6) */}
-            <div className={`col-span-1 flex flex-col items-center justify-center h-56 rounded-2xl border-2 bg-white p-2 shadow-inner transition-all duration-300 ${
-              gameState.lastSownPit === 6 ? 'border-[#0070f3] animate-pit-glow shadow-lg bg-[#eef6ff]' : 'border-[#0070f3]/30'
-            }`}>
+            <div className={`col-span-1 flex flex-col items-center justify-center h-56 rounded-2xl border-2 bg-white p-2 shadow-inner transition-all duration-300 ${gameState.lastSownPit === 6 ? 'border-[#0070f3] animate-pit-glow shadow-lg bg-[#eef6ff]' : 'border-[#0070f3]/30'
+              }`}>
               <span className="font-mono-code text-[10px] text-[#0070f3] mb-1">P1 STORE</span>
               <span className="text-2xl font-bold font-mono-code text-[#171717] animate-score-bump">
                 {gameState.pits[6]}
@@ -515,9 +504,8 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
                     onClick={() => handlePitClick(pitIdx)}
                     onMouseEnter={() => setHoveredPit(pitIdx)}
                     onMouseLeave={() => setHoveredPit(null)}
-                    className={`relative flex flex-col items-center justify-between h-28 rounded-xl border bg-white p-2.5 transition-all duration-200 ${
-                      canClick ? 'hover:border-black hover:-translate-y-1 hover:shadow-md active:scale-95 cursor-pointer' : 'cursor-default'
-                    } ${isPitActive ? 'border-[#eb367f] animate-pit-glow bg-[#fff0f5] scale-105 shadow-md' : ''}`}
+                    className={`relative flex flex-col items-center justify-between h-28 rounded-xl border bg-white p-2.5 transition-all duration-200 ${canClick ? 'hover:border-black hover:-translate-y-1 hover:shadow-md active:scale-95 cursor-pointer' : 'cursor-default'
+                      } ${isPitActive ? 'border-[#eb367f] animate-pit-glow bg-[#fff0f5] scale-105 shadow-md' : ''}`}
                   >
                     <span className="font-mono-code text-[10px] text-[#888888]">Pit {pitIdx + 1}</span>
                     <div className="my-auto flex items-center justify-center">
@@ -568,9 +556,8 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
                     onClick={() => handlePitClick(pitIdx)}
                     onMouseEnter={() => setHoveredPit(pitIdx)}
                     onMouseLeave={() => setHoveredPit(null)}
-                    className={`relative flex flex-col items-center justify-between h-28 rounded-xl border bg-white p-2.5 transition-all duration-200 ${
-                      canClick ? 'hover:border-[#0070f3] hover:-translate-y-1 hover:shadow-md active:scale-95 cursor-pointer border-[#0070f3]/40' : 'cursor-default'
-                    } ${isPitActive ? 'border-[#0070f3] animate-pit-glow bg-[#eef6ff] scale-105 shadow-md' : ''}`}
+                    className={`relative flex flex-col items-center justify-between h-28 rounded-xl border bg-white p-2.5 transition-all duration-200 ${canClick ? 'hover:border-[#0070f3] hover:-translate-y-1 hover:shadow-md active:scale-95 cursor-pointer border-[#0070f3]/40' : 'cursor-default'
+                      } ${isPitActive ? 'border-[#0070f3] animate-pit-glow bg-[#eef6ff] scale-105 shadow-md' : ''}`}
                   >
                     <span className="font-mono-code text-[10px] text-[#0070f3]">Pit {pitIdx + 1}</span>
                     <div className="my-auto flex items-center justify-center">
