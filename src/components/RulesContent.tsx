@@ -102,11 +102,10 @@ export const RulesContent: React.FC = () => {
             <button
               key={variant}
               onClick={() => setActiveTab(variant)}
-              className={`flex items-center gap-2 py-3 px-5 text-xs font-semibold border-b-2 transition-all ${
-                activeTab === variant
-                  ? 'border-black text-black'
-                  : 'border-transparent text-[#888888] hover:text-black'
-              }`}
+              className={`flex items-center gap-2 py-3 px-5 text-xs font-semibold border-b-2 transition-all ${activeTab === variant
+                ? 'border-black text-black'
+                : 'border-transparent text-[#888888] hover:text-black'
+                }`}
             >
               {data.icon}
               {data.title}
@@ -141,8 +140,8 @@ export const RulesContent: React.FC = () => {
                 </h3>
                 <ul className="space-y-3">
                   {data.rules.map((rule, idx) => (
-                    <li key={idx} className="flex gap-3">
-                      <strong className="text-[#171717] min-w-[140px] font-medium">{rule.label}:</strong>
+                    <li key={idx} className="flex gap-3 flex-wrap">
+                      <strong className="text-[#171717] font-medium w-48 flex-shrink-0">{rule.label}:</strong>
                       <span className="text-sm text-[#4d4d4d]">{rule.text}</span>
                     </li>
                   ))}
@@ -168,7 +167,7 @@ export const RulesContent: React.FC = () => {
               {/* Play Button */}
               <div className="pt-4 border-t border-[#ebebeb]">
                 <a
-                  href={`/play?variant=${variant}`}
+                  href={`/${variant}`}
                   className="inline-flex items-center gap-2 rounded-lg bg-[#171717] px-5 py-2.5 text-xs font-medium text-white hover:bg-black transition-all shadow-sm active:scale-98"
                 >
                   <Play className="h-3.5 w-3.5" />
