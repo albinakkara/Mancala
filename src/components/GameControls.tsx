@@ -1,13 +1,12 @@
 import React from 'react';
 import { Cpu, Users, RotateCcw, Undo2 } from 'lucide-react';
-import type { GameMode, Difficulty } from '../lib/types';
+import type { GameMode, Difficulty, GameVariant } from '../lib/types';
 
 interface GameControlsProps {
     mode: GameMode;
     difficulty: Difficulty;
+    variant: GameVariant;
     canUndo: boolean;
-    onModeChange: (mode: GameMode) => void;
-    onDifficultyChange: (difficulty: Difficulty) => void;
     onUndo: () => void;
     onNewGame: () => void;
 }
@@ -15,57 +14,41 @@ interface GameControlsProps {
 export const GameControls: React.FC<GameControlsProps> = ({
     mode,
     difficulty,
+    variant,
     canUndo,
-    onModeChange,
-    onDifficultyChange,
     onUndo,
     onNewGame,
 }) => {
+    const variantLabel =
+        variant === 'kalah' ? 'Kalah' : variant === 'avalanche' ? 'Avalanche' : 'Oware / Awale';
+
     return (
         <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-[#ebebeb] bg-white p-4 shadow-sm">
-            <div className="flex items-center gap-2">
-                <span className="font-mono-code text-xs text-[#888888]">MODE:</span>
-                <div className="inline-flex rounded-lg border border-[#ebebeb] bg-[#fafafa] p-0.5">
-                    <button
-                        onClick={() => onModeChange('pvc')}
-                        className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${mode === 'pvc'
-                                ? 'bg-black text-white shadow-sm scale-102'
-                                : 'text-[#4d4d4d] hover:text-black'
-                            }`}
-                    >
-                        <Cpu className="h-3.5 w-3.5" /> vs Computer
-                    </button>
-                    <button
-                        onClick={() => onModeChange('pvp')}
-                        className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${mode === 'pvp'
-                                ? 'bg-black text-white shadow-sm scale-102'
-                                : 'text-[#4d4d4d] hover:text-black'
-                            }`}
-                    >
-                        <Users className="h-3.5 w-3.5" /> 2 Players
-                    </button>
+            {/* Read-only game info badges */}
+            <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1.5 rounded-lg border border-[#ebebeb] bg-[#fafafa] px-3 py-1.5">
+                    <span className="font-mono-code text-[10px] text-[#888888] uppercase tracking-wider">Variant</span>
+                    <span className="text-xs font-semibold text-[#171717] capitalize">{variantLabel}</span>
                 </div>
-            </div>
-
-            {mode === 'pvc' && (
-                <div className="flex items-center gap-2">
-                    <span className="font-mono-code text-xs text-[#888888]">DIFFICULTY:</span>
-                    <div className="inline-flex rounded-lg border border-[#ebebeb] bg-[#fafafa] p-0.5">
-                        {(['easy', 'medium', 'hard'] as const).map((d) => (
-                            <button
-                                key={d}
-                                onClick={() => onDifficultyChange(d)}
-                                className={`capitalize rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200 ${difficulty === d
-                                        ? 'bg-black text-white shadow-sm scale-102'
-                                        : 'text-[#4d4d4d] hover:text-black'
-                                    }`}
-                            >
-                                {d}
-                            </button>
-                        ))}
+                <div className="flex items-center gap-1.5 rounded-lg border border-[#ebebeb] bg-[#fafafa] px-3 py-1.5">
+                    <span className="font-mono-code text-[10px] text-[#888888] uppercase tracking-wider">Mode</span>
+                    {mode === 'pvc' ? (
+                        <span className="text-xs font-semibold text-[#171717] flex items-center gap-1">
+                            <Cpu className="h-3 w-3" /> vs Computer
+                        </span>
+                    ) : (
+                        <span className="text-xs font-semibold text-[#171717] flex items-center gap-1">
+                            <Users className="h-3 w-3" /> 2 Players
+                        </span>
+                    )}
+                </div>
+                {mode === 'pvc' && (
+                    <div className="flex items-center gap-1.5 rounded-lg border border-[#ebebeb] bg-[#fafafa] px-3 py-1.5">
+                        <span className="font-mono-code text-[10px] text-[#888888] uppercase tracking-wider">Difficulty</span>
+                        <span className="text-xs font-semibold text-[#171717] capitalize">{difficulty}</span>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
 
             <div className="flex items-center gap-2">
                 <button

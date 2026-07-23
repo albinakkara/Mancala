@@ -1,19 +1,30 @@
-# MancalaBoard Refactoring Plan
+# Implementation Plan: Pre-Game Setup Dialog
 
-## Goal
-Split MancalaBoard.tsx (~520 lines) into 4 focused components:
-1. **GameControls.tsx** — Mode/difficulty toggles, Undo/New Match buttons
-2. **BoardGrid.tsx** — Board rendering (Kalah/Avalanche with stores, Oware 12-pit)
-3. **AnimatedSeedCluster.tsx** — Floating seed cluster + capture flying seeds overlay
-4. **MoveHistoryPanel.tsx** — Move history log at bottom
+## Steps - ✅ COMPLETE
 
-## Steps
-- [x] Step 1: Create TODO.md
-- [x] Step 2: Create GameControls.tsx
-- [x] Step 3: Create AnimatedSeedCluster.tsx
-- [x] Step 4: Create MoveHistoryPanel.tsx
-- [x] Step 5: Create BoardGrid.tsx
-- [x] Step 6: Rewrite MancalaBoard.tsx to use all 4 components
-- [x] Step 7: Run tests — all 79 tests pass ✅
-- [x] Step 8: Build project — 7 pages built successfully ✅
+### Step 1: Create `GameSetupDialog.tsx` ✅
+- New modal component for selecting mode (pvc/pvp) and difficulty (easy/medium/hard)
+- Difficulty only visible when mode is "vs Computer"
+- "Start Game" button to confirm choices
+- Matching existing design system (white, border-[#ebebeb], etc.)
+
+### Step 2: Edit `GameControls.tsx` ✅
+- Remove mode toggle buttons (vs Computer / 2 Players)
+- Remove difficulty toggle buttons (easy/medium/hard)
+- Show mode and difficulty as **read-only badges** instead
+- Keep Undo and New Match buttons
+- Simplified props (removed onModeChange, onDifficultyChange)
+
+### Step 3: Edit `MancalaBoard.tsx` ✅
+- Added `gameStarted` and `showSetup` state to control setup dialog visibility
+- Removed the `useEffect` that auto-restarted on mode/difficulty change
+- Added `handleSetupStart(mode, difficulty)` — called when user clicks "Start Game"
+- Added `handleNewGame` — sets `gameStarted = false` to show setup dialog again
+- Mode/difficulty are set once and never change during gameplay
+- Integrated `GameSetupDialog` component
+- Game controls/board/history are hidden until game starts
+
+### Step 4: Edit `WinnerPopup.tsx` ✅
+- No changes needed (already accepts `onNewGame` prop)
+- The handler passed from MancalaBoard now triggers setup dialog instead of direct restart
 

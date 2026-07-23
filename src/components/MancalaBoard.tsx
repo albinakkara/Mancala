@@ -8,6 +8,7 @@ import { getBestCpuMove } from '../lib/ai';
 import { soundFx } from '../lib/sound';
 import { WinnerPopup } from './WinnerPopup';
 import { GameControls } from './GameControls';
+import { GameSetupDialog } from './GameSetupDialog';
 import { BoardGrid } from './BoardGrid';
 import { AnimatedSeedCluster, type CaptureSeed, type CaptureAnimState } from './AnimatedSeedCluster';
 import { MoveHistoryPanel } from './MoveHistoryPanel';
@@ -24,10 +25,12 @@ function getInitialState(varType: GameVariant): BoardState {
 }
 
 export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }) => {
-  // ---- Game config state ----
+  // ---- Game config state (locked once game starts) ----
   const [mode, setMode] = useState<GameMode>('pvc');
   const [difficulty, setDifficulty] = useState<Difficulty>('medium');
   const [firstPlayer, setFirstPlayer] = useState<Player>(0);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [showSetup, setShowSetup] = useState(true);
 
   // ---- Core game state ----
   const [gameState, setGameState] = useState<BoardState>(() => getInitialState(variant));
@@ -81,6 +84,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
       s.statusMessage = "CPU plays first! Thinking...";
     }
     setGameState(s);
+    setUndoStack([]);
     setIsCpuThinking(false);
     setIsSowing(false);
     setActiveSowPit(null);
@@ -92,12 +96,55 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
     setClusterSeedCount(0);
     setClusterAnimClass('');
     setCatchingPit(null);
-    setUndoStack([]);
   }, [variant, firstPlayer, mode]);
 
-  useEffect(() => {
-    startNewGame();
-  }, [variant, mode, difficulty, firstPlayer, startNewGame]);
+  // Handle setup dialog confirmation — starts the game with locked settings
+  const handleSetupStart = useCallback((chosenMode: GameMode, chosenDifficulty: Difficulty) => {
+    // Reset to defaults
+    setFirstPlayer(0);
+    setMode(chosenMode);
+    setDifficulty(chosenDifficulty);
+    setGameStarted(true);
+    setShowSetup(false);
+    setUndoStack([]);
+    setIsCpuThinking(false);
+    setIsSowing(false);
+    setActiveSowPit(null);
+    setShowWinnerPopup(false);
+    setCaptureAnim({ active: false, seeds: [], fromPits: [], toStore: -1, player: 0 });
+    setCaptureGlowPits([]);
+    setCaptureStoreGlow(false);
+    setClusterVisible(false);
+    setClusterSeedCount(0);
+    setClusterAnimClass('');
+    setCatchingPit(null);
+
+    // Initialize game state with fresh board
+    const s = getInitialState(variant);
+    s.turn = 0;
+    s.statusMessage = chosenMode === 'pvc' ? 'Player 1 goes first. Take your turn!' : 'Player 1 goes first. Take your turn!';
+    setGameState(s);
+  }, [variant]);
+
+  // Handle "New Match" — shows setup dialog again
+  const handleNewGame = useCallback(() => {
+    setGameStarted(false);
+    setShowSetup(true);
+    setShowWinnerPopup(false);
+    setIsCpuThinking(false);
+    setIsSowing(false);
+    setActiveSowPit(null);
+    setCaptureAnim({ active: false, seeds: [], fromPits: [], toStore: -1, player: 0 });
+    setCaptureGlowPits([]);
+    setCaptureStoreGlow(false);
+    setClusterVisible(false);
+    setClusterSeedCount(0);
+    setClusterAnimClass('');
+    setCatchingPit(null);
+    setUndoStack([]);
+  }, []);
+
+  // No longer auto-restart on variant/mode/difficulty change
 
   // ---- Game over ----
   const handleGameOver = useCallback(
@@ -417,109 +464,123 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
 
   return (
     <div className="w-full max-w-5xl mx-auto flex flex-col gap-6">
-      {/* Game Controls: Mode, Difficulty, Undo, New Match */}
-      <GameControls
-        mode={mode}
-        difficulty={difficulty}
-        canUndo={canUndo}
-        onModeChange={setMode}
-        onDifficultyChange={setDifficulty}
-        onUndo={handleUndo}
-        onNewGame={startNewGame}
+      {/* Pre-game Setup Dialog */}
+      <GameSetupDialog
+        isOpen={showSetup}
+        variant={variant}
+        onStart={handleSetupStart}
       />
+
+      {/* Game Controls: Read-only badges, Undo, New Match */}
+      {gameStarted && (
+        <GameControls
+          mode={mode}
+          difficulty={difficulty}
+          variant={variant}
+          canUndo={canUndo}
+          onUndo={handleUndo}
+          onNewGame={handleNewGame}
+        />
+      )}
 
       {/* Status Bar */}
-      <div
-        className={`relative overflow-hidden rounded-xl border border-[#ebebeb] bg-white p-4 shadow-sm text-center transition-all duration-300 ${gameState.extraTurn ? 'animate-extra-turn' : ''
-          }`}
-      >
-        <div className="flex items-center justify-between px-2">
-          {/* Player 1 */}
-          <div
-            className={`flex items-center gap-2 rounded-lg px-3 py-1.5 transition-all duration-300 ${gameState.turn === 0 && !gameState.isGameOver
+      {gameStarted && (
+        <div
+          className={`relative overflow-hidden rounded-xl border border-[#ebebeb] bg-white p-4 shadow-sm text-center transition-all duration-300 ${gameState.extraTurn ? 'animate-extra-turn' : ''
+            }`}
+        >
+          <div className="flex items-center justify-between px-2">
+            {/* Player 1 */}
+            <div
+              className={`flex items-center gap-2 rounded-lg px-3 py-1.5 transition-all duration-300 ${gameState.turn === 0 && !gameState.isGameOver
                 ? 'bg-black text-white font-semibold scale-102 shadow-md'
                 : 'text-[#666]'
-              }`}
-          >
-            <span className="h-2 w-2 rounded-full bg-[#0070f3] animate-pulse" />
-            <span className="text-xs font-medium">Player 1 (Bottom)</span>
-            <span className="font-mono-code text-xs ml-2 animate-score-bump">
-              Score: {gameState.scores[0]}
-            </span>
-          </div>
-
-          {/* Center status */}
-          <div className="flex flex-col items-center">
-            <span className="font-mono-code text-[11px] text-[#888888] tracking-wider uppercase">
-              {variant} MANCALA
-            </span>
-            <p
-              key={gameState.statusMessage}
-              className="text-sm font-semibold text-[#171717] flex items-center gap-1.5 animate-fade-slide"
+                }`}
             >
-              {isCpuThinking && (
-                <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#7928ca] animate-ping" />
-              )}
-              {gameState.statusMessage}
-            </p>
-            {isSowing && (
-              <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-[#171717] px-3 py-1 text-white shadow-lg animate-float-hand">
-                <span className="text-xs">🌱</span>
-                <span className="font-mono-code text-xs font-bold">
-                  HAND: {clusterSeedCount} SEED{clusterSeedCount !== 1 ? 'S' : ''} REMAINING
-                </span>
-              </div>
-            )}
-          </div>
+              <span className="h-2 w-2 rounded-full bg-[#0070f3] animate-pulse" />
+              <span className="text-xs font-medium">Player 1 (Bottom)</span>
+              <span className="font-mono-code text-xs ml-2 animate-score-bump">
+                Score: {gameState.scores[0]}
+              </span>
+            </div>
 
-          {/* Player 2 / CPU */}
-          <div
-            className={`flex items-center gap-2 rounded-lg px-3 py-1.5 transition-all duration-300 ${gameState.turn === 1 && !gameState.isGameOver
+            {/* Center status */}
+            <div className="flex flex-col items-center">
+              <span className="font-mono-code text-[11px] text-[#888888] tracking-wider uppercase">
+                {variant} MANCALA
+              </span>
+              <p
+                key={gameState.statusMessage}
+                className="text-sm font-semibold text-[#171717] flex items-center gap-1.5 animate-fade-slide"
+              >
+                {isCpuThinking && (
+                  <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#7928ca] animate-ping" />
+                )}
+                {gameState.statusMessage}
+              </p>
+              {isSowing && (
+                <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-[#171717] px-3 py-1 text-white shadow-lg animate-float-hand">
+                  <span className="text-xs">🌱</span>
+                  <span className="font-mono-code text-xs font-bold">
+                    HAND: {clusterSeedCount} SEED{clusterSeedCount !== 1 ? 'S' : ''} REMAINING
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Player 2 / CPU */}
+            <div
+              className={`flex items-center gap-2 rounded-lg px-3 py-1.5 transition-all duration-300 ${gameState.turn === 1 && !gameState.isGameOver
                 ? 'bg-black text-white font-semibold scale-102 shadow-md'
                 : 'text-[#666]'
-              }`}
-          >
-            <span className="h-2 w-2 rounded-full bg-[#eb367f] animate-pulse" />
-            <span className="text-xs font-medium">
-              {mode === 'pvc' ? `CPU (${difficulty})` : 'Player 2 (Top)'}
-            </span>
-            <span className="font-mono-code text-xs ml-2 animate-score-bump">
-              Score: {gameState.scores[1]}
-            </span>
+                }`}
+            >
+              <span className="h-2 w-2 rounded-full bg-[#eb367f] animate-pulse" />
+              <span className="text-xs font-medium">
+                {mode === 'pvc' ? `CPU (${difficulty})` : 'Player 2 (Top)'}
+              </span>
+              <span className="font-mono-code text-xs ml-2 animate-score-bump">
+                Score: {gameState.scores[1]}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Board Grid with Animation Overlays */}
-      <div className="relative" ref={boardRef}>
-        <AnimatedSeedCluster
-          clusterVisible={clusterVisible}
-          clusterPos={clusterPos}
-          clusterSeedCount={clusterSeedCount}
-          clusterAnimClass={clusterAnimClass}
-          captureAnim={captureAnim}
-        />
-        <BoardGrid
-          variant={variant}
-          mode={mode}
-          gameState={gameState}
-          isCpuThinking={isCpuThinking}
-          isSowing={isSowing}
-          captureGlowPits={captureGlowPits}
-          captureStoreGlow={captureStoreGlow}
-          captureAnimPlayer={captureAnim.player}
-          catchingPit={catchingPit}
-          activeSowPit={activeSowPit}
-          onPitClick={handlePitClick}
-        />
-      </div>
+      {gameStarted && (
+        <div className="relative" ref={boardRef}>
+          <AnimatedSeedCluster
+            clusterVisible={clusterVisible}
+            clusterPos={clusterPos}
+            clusterSeedCount={clusterSeedCount}
+            clusterAnimClass={clusterAnimClass}
+            captureAnim={captureAnim}
+          />
+          <BoardGrid
+            variant={variant}
+            mode={mode}
+            gameState={gameState}
+            isCpuThinking={isCpuThinking}
+            isSowing={isSowing}
+            captureGlowPits={captureGlowPits}
+            captureStoreGlow={captureStoreGlow}
+            captureAnimPlayer={captureAnim.player}
+            catchingPit={catchingPit}
+            activeSowPit={activeSowPit}
+            onPitClick={handlePitClick}
+          />
+        </div>
+      )}
 
       {/* Move History */}
-      <MoveHistoryPanel
-        moveHistory={gameState.moveHistory}
-        variant={variant}
-        mode={mode}
-      />
+      {gameStarted && (
+        <MoveHistoryPanel
+          moveHistory={gameState.moveHistory}
+          variant={variant}
+          mode={mode}
+        />
+      )}
 
       {/* Winner Popup */}
       <WinnerPopup
@@ -528,7 +589,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
         scores={gameState.scores}
         variant={variant}
         mode={mode}
-        onNewGame={startNewGame}
+        onNewGame={handleNewGame}
       />
     </div>
   );
