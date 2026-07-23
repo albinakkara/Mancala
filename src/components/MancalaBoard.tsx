@@ -82,28 +82,6 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
     };
   }, []);
 
-  // ---- Reset / New Game ----
-  const startNewGame = useCallback(() => {
-    const s = getInitialState(variant);
-    s.turn = firstPlayer;
-    if (firstPlayer === 1 && mode === 'pvc') {
-      s.statusMessage = "CPU plays first! Thinking...";
-    }
-    setGameState(s);
-    setUndoStack([]);
-    setIsCpuThinking(false);
-    setIsSowing(false);
-    setActiveSowPit(null);
-    setShowWinnerPopup(false);
-    setCaptureAnim({ active: false, seeds: [], fromPits: [], toStore: -1, player: 0 });
-    setCaptureGlowPits([]);
-    setCaptureStoreGlow(false);
-    setClusterVisible(false);
-    setClusterSeedCount(0);
-    setClusterAnimClass('');
-    setCatchingPit(null);
-  }, [variant, firstPlayer, mode]);
-
   // Handle setup dialog confirmation — starts the game with locked settings
   const handleSetupStart = useCallback((chosenMode: GameMode, chosenDifficulty: Difficulty) => {
     // Reset to defaults
@@ -259,22 +237,23 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
       setIsSowing(true);
       setActiveSowPit(pitIndex);
 
-      // Save to undo stack
-      setUndoStack((prev) => [...prev, targetState]);
+      try {
+        // Save to undo stack
+        setUndoStack((prev) => [...prev, targetState]);
 
-      // Compute final state
-      let finalState: BoardState;
-      if (variant === 'kalah') finalState = makeKalahMove(targetState, pitIndex);
-      else if (variant === 'avalanche') finalState = makeAvalancheMove(targetState, pitIndex);
-      else finalState = makeOwareMove(targetState, pitIndex);
+        // Compute final state
+        let finalState: BoardState;
+        if (variant === 'kalah') finalState = makeKalahMove(targetState, pitIndex);
+        else if (variant === 'avalanche') finalState = makeAvalancheMove(targetState, pitIndex);
+        else finalState = makeOwareMove(targetState, pitIndex);
 
-      const capturedPits = finalState.moveHistory[0]?.capturedPits;
-      const capturedCount = finalState.moveHistory[0]?.captured || 0;
-      const currentPlayer = targetState.turn;
+        const capturedPits = finalState.moveHistory[0]?.capturedPits;
+        const capturedCount = finalState.moveHistory[0]?.captured || 0;
+        const currentPlayer = targetState.turn;
 
-      // Build animation sequence
-      const seq = buildSowSequence(targetState, pitIndex);
-      if (seq.length === 0) {
+        // Build animation sequence
+        const seq = buildSowSequence(targetState, pitIndex);
+        if (seq.length === 0) {
         setIsSowing(false);
         setActiveSowPit(null);
         setIsCpuThinking(false);
@@ -445,6 +424,11 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
       setActiveSowPit(null);
       setIsCpuThinking(false);
       if (finalState.isGameOver) handleGameOver(finalState);
+    } catch (error) {
+      setIsSowing(false);
+      setActiveSowPit(null);
+      setIsCpuThinking(false);
+    }
     },
     [variant, isSowing, handleGameOver, buildSowSequence, getPitCenter]
   );
@@ -477,9 +461,13 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
           if (response.type === 'BEST_MOVE' && response.id === requestId) {
             worker.removeEventListener('message', handleMessage);
             if (!isMounted.current) return;
-            if (response.move !== null) {
-              executeAnimatedMove(response.move, gameState);
-            } else {
+            try {
+              if (response.move !== null) {
+                executeAnimatedMove(response.move, gameState);
+              } else {
+                setIsCpuThinking(false);
+              }
+            } catch (error) {
               setIsCpuThinking(false);
             }
           }
@@ -549,13 +537,14 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
 
             {/* Center status */}
             <div className="flex flex-col items-center order-first sm:order-none w-full sm:w-auto">
-              <span className="font-mono-code text-[10px] sm:text-[11px] text-[#888888] tracking-wider uppercase">
+              <span className="font-mono-code text-[10px] sm:text-[11px] text-[#888888] tracking-wider uppercase" aria-live="polite">
                 {variant} MANCALA
               </span>
               <p
-                key={gameState.statusMessage}
-                className="text-[11px] sm:text-sm font-semibold text-[#171717] flex items-center gap-1.5 animate-fade-slide"
-              >
+                 key={gameState.statusMessage}
+                 className="text-[11px] sm:text-sm font-semibold text-[#171717] flex items-center gap-1.5 animate-fade-slide"
+                 aria-live="polite"
+               >
                 {isCpuThinking && (
                   <span className="inline-block h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-[#7928ca] animate-ping" />
                 )}

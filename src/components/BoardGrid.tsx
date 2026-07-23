@@ -54,8 +54,6 @@ export const BoardGrid = React.forwardRef<HTMLDivElement, BoardGridProps>(
         },
         ref
     ) => {
-        const [hoveredPit, setHoveredPit] = React.useState<number | null>(null);
-
         const isKalahType = variant === 'kalah' || variant === 'avalanche';
 
         const renderPitBtn = useCallback(
@@ -70,14 +68,31 @@ export const BoardGrid = React.forwardRef<HTMLDivElement, BoardGridProps>(
                 topRow: boolean
             ) => {
                 const canPitClick = canClick && seedCount > 0;
+                const ariaLabel = `${label}, ${seedCount} seed${seedCount !== 1 ? 's' : ''}${canPitClick ? ', clickable' : ', not clickable'}`;
+                const rowPits = topRow ? [12, 11, 10, 9, 8, 7] : [0, 1, 2, 3, 4, 5];
                 return (
                     <button
                         key={pitIdx}
                         data-pit-index={pitIdx}
                         disabled={!canPitClick}
                         onClick={() => onPitClick(pitIdx)}
-                        onMouseEnter={() => setHoveredPit(pitIdx)}
-                        onMouseLeave={() => setHoveredPit(null)}
+                        aria-label={ariaLabel}
+                        role="gridcell"
+                        tabIndex={canPitClick ? 0 : -1}
+                        onKeyDown={(e) => {
+                          if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return;
+                          const idx = rowPits.indexOf(pitIdx);
+                          const oppositeRow = topRow ? [0, 1, 2, 3, 4, 5] : [12, 11, 10, 9, 8, 7];
+                          let targetPit: number | null = null;
+                          if (e.key === 'ArrowLeft' && idx > 0) targetPit = rowPits[idx - 1];
+                          if (e.key === 'ArrowRight' && idx < rowPits.length - 1) targetPit = rowPits[idx + 1];
+                          if (e.key === 'ArrowUp' && !topRow) targetPit = oppositeRow[idx];
+                          if (e.key === 'ArrowDown' && topRow) targetPit = oppositeRow[idx];
+                          if (targetPit === null) return;
+                          e.preventDefault();
+                          const el = document.querySelector(`[data-pit-index="${targetPit}"]`) as HTMLElement | null;
+                          el?.focus();
+                        }}
                         className={`relative flex flex-col items-center justify-between h-20 sm:h-24 md:h-28 lg:h-32 rounded-lg sm:rounded-xl border bg-white p-0.5 sm:p-1 md:p-2 transition-all duration-200 min-w-0 ${canPitClick
                             ? 'hover:border-black hover:-translate-y-1 hover:shadow-md active:scale-95 cursor-pointer'
                             : 'cursor-default'
@@ -121,6 +136,8 @@ export const BoardGrid = React.forwardRef<HTMLDivElement, BoardGridProps>(
         return (
             <div
                 ref={ref}
+                role="grid"
+                aria-label="Mancala board"
                 className="relative rounded-2xl border border-[#ebebeb] bg-[#fafafa] p-1 sm:p-2 md:p-4 lg:p-6 shadow-lg overflow-hidden"
             >
                 {isKalahType ? (
@@ -129,6 +146,8 @@ export const BoardGrid = React.forwardRef<HTMLDivElement, BoardGridProps>(
                         {/* P2 / CPU Store (pit 13 - left side, col 1) */}
                         <div
                             data-pit-index={13}
+                            role="gridcell"
+                            aria-label={`${mode === 'pvc' ? 'CPU' : 'Player 2'} store, ${gameState.pits[13]} seeds`}
                             className={`col-span-1 flex flex-col items-center justify-center h-32 sm:h-36 md:h-44 lg:h-52 xl:h-60 rounded-xl sm:rounded-2xl border-2 bg-white p-0.5 sm:p-1 md:p-2 shadow-inner transition-all duration-300 min-w-0 overflow-hidden ${captureStoreGlow && captureAnimPlayer === 1
                                 ? 'border-[#ffd700] bg-[#fffef0] shadow-lg animate-store-capture'
                                 : gameState.lastSownPit === 13
@@ -155,7 +174,7 @@ export const BoardGrid = React.forwardRef<HTMLDivElement, BoardGridProps>(
                         {/* Center pits (cols 2-7) */}
                         <div className="col-span-6 flex flex-col gap-1 sm:gap-2 md:gap-3 min-w-0">
                             {/* Top row: P2 pits (indices 12,11,10,9,8,7) */}
-                            <div className="grid grid-cols-6 gap-0.5 sm:gap-1 md:gap-2 min-w-0">
+                            <div role="row" className="grid grid-cols-6 gap-0.5 sm:gap-1 md:gap-2 min-w-0">
                                 {[12, 11, 10, 9, 8, 7].map((idx) =>
                                     renderPitBtn(
                                         idx,
@@ -170,7 +189,7 @@ export const BoardGrid = React.forwardRef<HTMLDivElement, BoardGridProps>(
                                 )}
                             </div>
                             {/* Bottom row: P1 pits (indices 0,1,2,3,4,5) */}
-                            <div className="grid grid-cols-6 gap-0.5 sm:gap-1 md:gap-2 min-w-0">
+                            <div role="row" className="grid grid-cols-6 gap-0.5 sm:gap-1 md:gap-2 min-w-0">
                                 {[0, 1, 2, 3, 4, 5].map((idx) =>
                                     renderPitBtn(
                                         idx,
@@ -189,6 +208,8 @@ export const BoardGrid = React.forwardRef<HTMLDivElement, BoardGridProps>(
                         {/* P1 Store (pit 6 - right side, col 8) */}
                         <div
                             data-pit-index={6}
+                            role="gridcell"
+                            aria-label={`Player 1 store, ${gameState.pits[6]} seeds`}
                             className={`col-span-1 flex flex-col items-center justify-center h-32 sm:h-36 md:h-44 lg:h-52 xl:h-60 rounded-xl sm:rounded-2xl border-2 bg-white p-0.5 sm:p-1 md:p-2 shadow-inner transition-all duration-300 min-w-0 overflow-hidden ${captureStoreGlow && captureAnimPlayer === 0
                                 ? 'border-[#ffd700] bg-[#fffef0] shadow-lg animate-store-capture'
                                 : gameState.lastSownPit === 6
@@ -216,7 +237,7 @@ export const BoardGrid = React.forwardRef<HTMLDivElement, BoardGridProps>(
                     /* ───── Oware Board: no stores, 12 pits ───── */
                     <div className="flex flex-col gap-1 sm:gap-2 md:gap-3 max-w-4xl mx-auto min-w-0">
                         {/* Top row: P2 pits (indices 11,10,9,8,7,6) */}
-                        <div className="grid grid-cols-6 gap-0.5 sm:gap-1 md:gap-2 min-w-0">
+                        <div role="row" className="grid grid-cols-6 gap-0.5 sm:gap-1 md:gap-2 min-w-0">
                             {[11, 10, 9, 8, 7, 6].map((idx) =>
                                 renderPitBtn(
                                     idx,
@@ -243,7 +264,7 @@ export const BoardGrid = React.forwardRef<HTMLDivElement, BoardGridProps>(
                             </div>
                         </div>
                         {/* Bottom row: P1 pits (indices 0,1,2,3,4,5) */}
-                        <div className="grid grid-cols-6 gap-0.5 sm:gap-1 md:gap-2 min-w-0">
+                        <div role="row" className="grid grid-cols-6 gap-0.5 sm:gap-1 md:gap-2 min-w-0">
                             {[0, 1, 2, 3, 4, 5].map((idx) =>
                                 renderPitBtn(
                                     idx,

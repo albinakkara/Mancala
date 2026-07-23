@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Cpu, Users, Play } from 'lucide-react';
 import type { GameMode, Difficulty, GameVariant } from '../lib/types';
 
@@ -15,26 +15,26 @@ export const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
 }) => {
     const [mode, setMode] = useState<GameMode>('pvc');
     const [difficulty, setDifficulty] = useState<Difficulty>('medium');
-    const [visible, setVisible] = useState(false);
-    const [showContent, setShowContent] = useState(false);
+    const [showContent, setShowContent] = useState(true);
+    const handleStartTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
         if (isOpen) {
-            setVisible(true);
-            setTimeout(() => setShowContent(true), 80);
+            setShowContent(true);
         } else {
             setShowContent(false);
-            const timer = setTimeout(() => setVisible(false), 300);
-            return () => clearTimeout(timer);
         }
     }, [isOpen]);
 
-    if (!visible) return null;
+    if (!isOpen) return null;
 
     const variantLabel =
         variant === 'kalah' ? 'Kalah' : variant === 'avalanche' ? 'Avalanche' : 'Oware / Awale';
 
     const handleStart = () => {
+        if (handleStartTimerRef.current) {
+            clearTimeout(handleStartTimerRef.current);
+        }
         onStart(mode, difficulty);
     };
 

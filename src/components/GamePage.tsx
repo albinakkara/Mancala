@@ -3,35 +3,19 @@ import { Navbar } from './Navbar';
 import { MancalaBoard } from './MancalaBoard';
 import { Footer } from './Footer';
 import type { GameVariant, GameMode, Difficulty, Player } from '../lib/types';
+import { recordGameEnd } from '../lib/stats';
+import { ErrorBoundary } from './ErrorBoundary';
 
 interface GamePageProps {
   initialVariant?: GameVariant;
 }
 
 export const GamePage: React.FC<GamePageProps> = ({ initialVariant = 'kalah' }) => {
-  const [selectedVariant, setSelectedVariant] = useState<GameVariant>(initialVariant);
+  const [selectedVariant] = useState<GameVariant>(initialVariant);
   const [resetKey, setResetKey] = useState(0);
 
   const handleGameEnd = (winner: Player | 'draw', variant: GameVariant, mode: GameMode, difficulty: Difficulty) => {
-    if (typeof window === 'undefined') return;
-    const existingStr = localStorage.getItem('onlinemancala_stats');
-    let stats = {
-      kalah: { wins: 0, losses: 0, draws: 0 },
-      avalanche: { wins: 0, losses: 0, draws: 0 },
-      oware: { wins: 0, losses: 0, draws: 0 },
-    };
-
-    if (existingStr) {
-      try {
-        stats = JSON.parse(existingStr);
-      } catch (e) { }
-    }
-
-    if (winner === 0) stats[variant].wins += 1;
-    else if (winner === 1) stats[variant].losses += 1;
-    else stats[variant].draws += 1;
-
-    localStorage.setItem('onlinemancala_stats', JSON.stringify(stats));
+    recordGameEnd(winner, variant, mode, difficulty);
   };
 
   return (
@@ -70,7 +54,9 @@ export const GamePage: React.FC<GamePageProps> = ({ initialVariant = 'kalah' }) 
             </div>
           </div>
 
-          <MancalaBoard key={`${selectedVariant}-${resetKey}`} variant={selectedVariant} onGameEnd={handleGameEnd} />
+          <ErrorBoundary>
+            <MancalaBoard key={`${selectedVariant}-${resetKey}`} variant={selectedVariant} onGameEnd={handleGameEnd} />
+          </ErrorBoundary>
         </div>
       </section>
 

@@ -1,36 +1,17 @@
-# Astro Starter Kit: Basics
+# Online Mancala
 
-```sh
-npm create astro@latest -- --template basics
-```
+Play Kalah, Avalanche Mancala, and Oware / Awale online with 3 AI difficulties or 2-player pass & play. Free, no registration.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Features
 
-## 🚀 Project Structure
+- 3 Mancala variants (Kalah, Avalanche, Oware / Awale)
+- 3 CPU AI difficulties (Easy, Medium, Hard)
+- 2-player pass & play mode
+- Animated sowing and capture effects
+- Move history and statistics tracking
+- Sound effects and responsive design
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
-
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
+## Commands
 
 | Command                   | Action                                           |
 | :------------------------ | :----------------------------------------------- |
@@ -38,9 +19,32 @@ All commands are run from the root of the project, from a terminal:
 | `npm run dev`             | Starts local dev server at `localhost:4321`      |
 | `npm run build`           | Build your production site to `./dist/`          |
 | `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
+| `npm run check`           | Run Astro type checking                         |
+| `npm run lint`            | Run ESLint                                       |
+| `npm run format`          | Run Prettier                                     |
+| `npm run test`            | Run tests with Vitest                           |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
+## Tech Stack
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- [Astro](https://astro.build)
+- [React](https://react.dev)
+- [Tailwind CSS v4](https://tailwindcss.com)
+- [Vitest](https://vitest.dev)
+
+## Project Structure
+
+```
+src/
+├── components/       # React UI components
+├── lib/              # Game logic, AI engine, sound, stats
+├── pages/            # Astro routes
+├── layouts/          # Shared layout
+├── workers/          # Web Worker for CPU AI
+├── styles/           # Global CSS
+tests/                # Unit tests
+```
+
+## License
+
+MIT

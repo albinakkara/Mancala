@@ -6,7 +6,8 @@ import { RulesModal } from './RulesModal';
 import { StatsDrawer } from './StatsDrawer';
 import { Footer } from './Footer';
 import type { GameVariant, GameMode, Difficulty, Player } from '../lib/types';
-import { Sparkles, Play, Shield, Repeat, ArrowRight, Zap, Check } from 'lucide-react';
+import { recordGameEnd } from '../lib/stats';
+import { Check } from 'lucide-react';
 
 export const MainApp: React.FC = () => {
   const [selectedVariant, setSelectedVariant] = useState<GameVariant>('kalah');
@@ -15,25 +16,7 @@ export const MainApp: React.FC = () => {
   const [resetKey, setResetKey] = useState(0);
 
   const handleGameEnd = (winner: Player | 'draw', variant: GameVariant, mode: GameMode, difficulty: Difficulty) => {
-    if (typeof window === 'undefined') return;
-    const existingStr = localStorage.getItem('onlinemancala_stats');
-    let stats = {
-      kalah: { wins: 0, losses: 0, draws: 0 },
-      avalanche: { wins: 0, losses: 0, draws: 0 },
-      oware: { wins: 0, losses: 0, draws: 0 },
-    };
-
-    if (existingStr) {
-      try {
-        stats = JSON.parse(existingStr);
-      } catch (e) { }
-    }
-
-    if (winner === 0) stats[variant].wins += 1;
-    else if (winner === 1) stats[variant].losses += 1;
-    else stats[variant].draws += 1;
-
-    localStorage.setItem('onlinemancala_stats', JSON.stringify(stats));
+    recordGameEnd(winner, variant, mode, difficulty);
   };
 
   const scrollToBoard = (variant: GameVariant) => {
@@ -46,24 +29,17 @@ export const MainApp: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      {/* Header */}
       <Navbar
         currentVariant={selectedVariant}
-        onSelectVariant={(v) => scrollToBoard(v)}
-        onOpenRules={() => setIsRulesOpen(true)}
-        onOpenStats={() => setIsStatsOpen(true)}
         onResetGame={() => setResetKey((prev) => prev + 1)}
       />
 
-      {/* HERO SECTION with Vercel Mesh Accent */}
       <section className="relative overflow-hidden border-b border-[#ebebeb] bg-gradient-to-b from-[#fafafa] via-white to-white py-16 sm:py-24">
-        {/* Subtle mesh color background blur */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-48 pointer-events-none opacity-20 blur-3xl">
           <div className="h-full w-full bg-gradient-to-r from-[#007cf0] via-[#7928ca] to-[#ff0080]" />
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          {/* Badge */}
           <div className="inline-flex items-center gap-2 rounded-full border border-[#ebebeb] bg-white px-3 py-1 shadow-sm mb-6">
             <span className="h-2 w-2 rounded-full bg-[#0070f3] animate-pulse" />
             <span className="font-mono-code text-xs font-medium text-[#171717]">
@@ -71,7 +47,6 @@ export const MainApp: React.FC = () => {
             </span>
           </div>
 
-          {/* Heading */}
           <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#171717] max-w-4xl mx-auto leading-tight sm:leading-none">
             The Ancient Game of Strategy, Reimagined for the Modern Web.
           </h1>
@@ -80,7 +55,6 @@ export const MainApp: React.FC = () => {
             Play <strong>Kalah</strong>, <strong>Avalanche Mancala</strong>, or <strong>Oware / Awale</strong> against intelligent AI algorithms (Easy, Medium, Hard) or challenge a friend in 2-player pass & play mode.
           </p>
 
-          {/* Features Highlights */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-[#666] font-mono-code">
             <div className="flex items-center gap-1.5">
               <Check className="h-4 w-4 text-[#0070f3]" />
@@ -102,7 +76,6 @@ export const MainApp: React.FC = () => {
         </div>
       </section>
 
-      {/* CHOOSE MANCALA VARIANT SECTION */}
       <section id="variants" className="py-12 bg-white border-b border-[#ebebeb]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
@@ -151,7 +124,6 @@ export const MainApp: React.FC = () => {
         </div>
       </section>
 
-      {/* LIVE GAME BOARD SECTION */}
       <section id="mancala-game-board" className="py-8 sm:py-12 bg-[#fafafa] flex-1">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
@@ -184,11 +156,9 @@ export const MainApp: React.FC = () => {
         </div>
       </section>
 
-      {/* GAME RULES MODAL & STATS DRAWER */}
       <RulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} initialVariant={selectedVariant} />
       <StatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} />
 
-      {/* Footer */}
       <Footer />
     </div>
   );

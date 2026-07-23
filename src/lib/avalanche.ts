@@ -42,7 +42,6 @@ export function makeAvalancheMove(state: BoardState, chosenPit: number): BoardSt
 
   let currentPit = chosenPit;
   let totalLaps = 1;
-  let totalSeedsSownInMove = handSeeds;
   let extraTurnGranted = false;
 
   // Continuous sowing loop
@@ -65,7 +64,6 @@ export function makeAvalancheMove(state: BoardState, chosenPit: number): BoardSt
         // Landing in non-empty pit: pick up ALL seeds and keep sowing!
         handSeeds = newPits[currentPit];
         newPits[currentPit] = 0;
-        totalSeedsSownInMove += handSeeds;
         totalLaps += 1;
       } else {
         // Landing in empty pit (value is 1 now): turn ends!

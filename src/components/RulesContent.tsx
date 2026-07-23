@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Shield, Repeat, Sparkles, CheckCircle2, Play, ArrowRight, Home } from 'lucide-react';
+import { BookOpen, Shield, Repeat, Sparkles, CheckCircle2, Play, Home } from 'lucide-react';
 import type { GameVariant } from '../lib/types';
 
 const variantData: Record<GameVariant, {

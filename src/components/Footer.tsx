@@ -1,5 +1,4 @@
 import React from 'react';
-import { Globe, Heart, Code2 } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (

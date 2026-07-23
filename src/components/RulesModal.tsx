@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, BookOpen, Shield, Repeat, Sparkles, CheckCircle2 } from 'lucide-react';
+import { X, BookOpen, CheckCircle2 } from 'lucide-react';
 import type { GameVariant } from '../lib/types';
 
 interface RulesModalProps {
