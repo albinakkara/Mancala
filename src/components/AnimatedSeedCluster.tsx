@@ -44,24 +44,24 @@ export const AnimatedSeedCluster: React.FC<AnimatedSeedClusterProps> = ({
                 style={{
                     left: clusterPos.x,
                     top: clusterPos.y,
-                    width: 44,
-                    height: 44,
+                    width: 28,
+                    height: 28,
                     transform: 'translate(-50%,-50%)',
                     transition:
                         'left 0.3s cubic-bezier(0.2,0,0,1), top 0.3s cubic-bezier(0.2,0,0,1)',
                 }}
             >
-                <div className="absolute inset-1 flex items-center justify-center flex-wrap gap-px p-0.5">
-                    {Array.from({ length: Math.min(clusterSeedCount, 12) }).map((_, i) => (
+                <div className="absolute inset-0.5 flex items-center justify-center flex-wrap gap-[1px] p-0.5">
+                    {Array.from({ length: Math.min(clusterSeedCount, 8) }).map((_, i) => (
                         <span
                             key={i}
                             className="rounded-full"
-                            style={{ width: 10, height: 10, backgroundColor: '#171717' }}
+                            style={{ width: 5, height: 5, backgroundColor: '#171717' }}
                         />
                     ))}
-                    {clusterSeedCount > 12 && (
-                        <span className="absolute -top-0.5 -right-0.5 text-[7px] font-bold text-white font-mono-code bg-black rounded-full px-0.5 leading-none">
-                            +{clusterSeedCount - 12}
+                    {clusterSeedCount > 8 && (
+                        <span className="absolute -top-0.5 -right-0.5 text-[5px] font-bold text-white font-mono-code bg-black rounded-full px-[1px] leading-none">
+                            +{clusterSeedCount - 8}
                         </span>
                     )}
                 </div>
@@ -79,8 +79,8 @@ export const AnimatedSeedCluster: React.FC<AnimatedSeedClusterProps> = ({
                         data-capture-seed={seed.id}
                         className="absolute rounded-full"
                         style={{
-                            width: 10,
-                            height: 10,
+                            width: 7,
+                            height: 7,
                             backgroundColor: '#171717',
                             left: seed.startX,
                             top: seed.startY,

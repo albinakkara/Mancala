@@ -1,9 +1,10 @@
-# TODO: Add "Back to Home" option to Rules and Stats pages
+# Mancala 320×568 Viewport Fixes
 
-## Steps
+## Progress
 
-- [x] 1. Analyze the codebase and gather information
-- [x] 2. Get user approval on the plan
-- [x] 3. **Edit `src/components/RulesContent.tsx`** - Add `Home` icon import and "Back to Home" link
-- [x] 4. **Edit `src/components/StatsContent.tsx`** - Add `Home` icon import and "Back to Home" link
+- [x] **Step 1**: Fix `BoardGrid.tsx` - reduce gaps, add `min-w-0`, resize seed dots, fix pit/store dimensions
+- [x] **Step 2**: Fix `MancalaBoard.tsx` - reduce `max-w-5xl` to `max-w-4xl`, tighten status bar
+- [x] **Step 3**: Fix `AnimatedSeedCluster.tsx` - reduce hand element size for small screens
+- [x] **Step 4**: Fix `GameControls.tsx` - more compact badges at small sizes
+- [x] **Step 5**: Verify changes work together
 

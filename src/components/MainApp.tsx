@@ -26,7 +26,7 @@ export const MainApp: React.FC = () => {
     if (existingStr) {
       try {
         stats = JSON.parse(existingStr);
-      } catch (e) {}
+      } catch (e) { }
     }
 
     if (winner === 0) stats[variant].wins += 1;
@@ -152,28 +152,27 @@ export const MainApp: React.FC = () => {
       </section>
 
       {/* LIVE GAME BOARD SECTION */}
-      <section id="mancala-game-board" className="py-12 bg-[#fafafa] flex-1">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <section id="mancala-game-board" className="py-8 sm:py-12 bg-[#fafafa] flex-1">
+        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+          <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
             <div>
-              <span className="font-mono-code text-xs text-[#0070f3] font-bold uppercase tracking-wider">
+              <span className="font-mono-code text-[10px] sm:text-xs text-[#0070f3] font-bold uppercase tracking-wider">
                 ACTIVE MATCH
               </span>
-              <h2 className="text-2xl font-bold tracking-tight text-[#171717] capitalize">
+              <h2 className="text-lg sm:text-2xl font-bold tracking-tight text-[#171717] capitalize">
                 Playing {selectedVariant === 'oware' ? 'Oware / Awale' : selectedVariant} Mancala
               </h2>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               {(['kalah', 'avalanche', 'oware'] as const).map((v) => (
                 <button
                   key={v}
                   onClick={() => setSelectedVariant(v)}
-                  className={`rounded-lg px-3 py-1.5 text-xs font-semibold border transition ${
-                    selectedVariant === v
+                  className={`rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold border transition ${selectedVariant === v
                       ? 'bg-black text-white border-black shadow-sm'
                       : 'bg-white text-[#4d4d4d] border-[#ebebeb] hover:border-black'
-                  }`}
+                    }`}
                 >
                   {v.toUpperCase()}
                 </button>

@@ -483,7 +483,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto flex flex-col gap-6">
+    <div className="w-full mx-auto flex flex-col gap-3 sm:gap-4 md:gap-6 max-w-4xl">
       {/* Pre-game Setup Dialog */}
       <GameSetupDialog
         isOpen={showSetup}
@@ -506,42 +506,44 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
       {/* Status Bar */}
       {gameStarted && (
         <div
-          className={`relative overflow-hidden rounded-xl border border-[#ebebeb] bg-white p-4 shadow-sm text-center transition-all duration-300 ${gameState.extraTurn ? 'animate-extra-turn' : ''
+          className={`relative overflow-hidden rounded-xl border border-[#ebebeb] bg-white p-2 sm:p-4 shadow-sm text-center transition-all duration-300 ${gameState.extraTurn ? 'animate-extra-turn' : ''
             }`}
         >
-          <div className="flex items-center justify-between px-2">
+          <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-2 sm:gap-0 px-1 sm:px-2">
             {/* Player 1 */}
             <div
-              className={`flex items-center gap-2 rounded-lg px-3 py-1.5 transition-all duration-300 ${gameState.turn === 0 && !gameState.isGameOver
+              className={`flex items-center gap-1.5 sm:gap-2 rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 transition-all duration-300 ${gameState.turn === 0 && !gameState.isGameOver
                 ? 'bg-black text-white font-semibold scale-102 shadow-md'
                 : 'text-[#666]'
                 }`}
             >
-              <span className="h-2 w-2 rounded-full bg-[#0070f3] animate-pulse" />
-              <span className="text-xs font-medium">Player 1 (Bottom)</span>
-              <span className="font-mono-code text-xs ml-2 animate-score-bump">
+              <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-[#0070f3] animate-pulse" />
+              <span className="text-[10px] sm:text-xs font-medium">
+                Player 1 <span className="hidden sm:inline">(Bottom)</span>
+              </span>
+              <span className="font-mono-code text-[10px] sm:text-xs ml-1 sm:ml-2 animate-score-bump">
                 Score: {gameState.scores[0]}
               </span>
             </div>
 
             {/* Center status */}
-            <div className="flex flex-col items-center">
-              <span className="font-mono-code text-[11px] text-[#888888] tracking-wider uppercase">
+            <div className="flex flex-col items-center order-first sm:order-none w-full sm:w-auto">
+              <span className="font-mono-code text-[10px] sm:text-[11px] text-[#888888] tracking-wider uppercase">
                 {variant} MANCALA
               </span>
               <p
                 key={gameState.statusMessage}
-                className="text-sm font-semibold text-[#171717] flex items-center gap-1.5 animate-fade-slide"
+                className="text-[11px] sm:text-sm font-semibold text-[#171717] flex items-center gap-1.5 animate-fade-slide"
               >
                 {isCpuThinking && (
-                  <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#7928ca] animate-ping" />
+                  <span className="inline-block h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-[#7928ca] animate-ping" />
                 )}
-                {gameState.statusMessage}
+                <span className="truncate max-w-[180px] sm:max-w-none">{gameState.statusMessage}</span>
               </p>
               {isSowing && (
-                <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-[#171717] px-3 py-1 text-white shadow-lg animate-float-hand">
-                  <span className="text-xs">🌱</span>
-                  <span className="font-mono-code text-xs font-bold">
+                <div className="mt-1 sm:mt-2 inline-flex items-center gap-1 sm:gap-2 rounded-full bg-[#171717] px-2 sm:px-3 py-0.5 sm:py-1 text-white shadow-lg animate-float-hand">
+                  <span className="text-[10px] sm:text-xs">🌱</span>
+                  <span className="font-mono-code text-[10px] sm:text-xs font-bold">
                     HAND: {clusterSeedCount} SEED{clusterSeedCount !== 1 ? 'S' : ''} REMAINING
                   </span>
                 </div>
@@ -550,16 +552,16 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
 
             {/* Player 2 / CPU */}
             <div
-              className={`flex items-center gap-2 rounded-lg px-3 py-1.5 transition-all duration-300 ${gameState.turn === 1 && !gameState.isGameOver
+              className={`flex items-center gap-1.5 sm:gap-2 rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 transition-all duration-300 ${gameState.turn === 1 && !gameState.isGameOver
                 ? 'bg-black text-white font-semibold scale-102 shadow-md'
                 : 'text-[#666]'
                 }`}
             >
-              <span className="h-2 w-2 rounded-full bg-[#eb367f] animate-pulse" />
-              <span className="text-xs font-medium">
-                {mode === 'pvc' ? `CPU (${difficulty})` : 'Player 2 (Top)'}
+              <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-[#eb367f] animate-pulse" />
+              <span className="text-[10px] sm:text-xs font-medium">
+                {mode === 'pvc' ? `CPU (${difficulty})` : <>Player 2 <span className="hidden sm:inline">(Top)</span></>}
               </span>
-              <span className="font-mono-code text-xs ml-2 animate-score-bump">
+              <span className="font-mono-code text-[10px] sm:text-xs ml-1 sm:ml-2 animate-score-bump">
                 Score: {gameState.scores[1]}
               </span>
             </div>
