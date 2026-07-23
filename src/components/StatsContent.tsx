@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Trophy, RefreshCcw, Award, Percent, BarChart3, TrendingUp } from 'lucide-react';
+import { Trophy, RefreshCcw, Award, Percent, BarChart3, TrendingUp, Home } from 'lucide-react';
 import type { GameStats } from '../lib/types';
 
 export const StatsContent: React.FC = () => {
@@ -172,12 +172,21 @@ export const StatsContent: React.FC = () => {
           <RefreshCcw className="h-3.5 w-3.5" />
           Reset All Stats
         </button>
-        <a
-          href="/play"
-          className="flex items-center gap-1.5 rounded-lg bg-[#171717] px-4 py-2 text-xs font-medium text-white hover:bg-black transition"
-        >
-          Back to Game
-        </a>
+        <div className="flex items-center gap-3">
+          <a
+            href="/"
+            className="flex items-center gap-1.5 rounded-lg border border-[#ebebeb] px-4 py-2 text-xs font-medium text-[#171717] hover:bg-[#f5f5f5] transition"
+          >
+            <Home className="h-3.5 w-3.5" />
+            Back to Home
+          </a>
+          <a
+            href="/play"
+            className="flex items-center gap-1.5 rounded-lg bg-[#171717] px-4 py-2 text-xs font-medium text-white hover:bg-black transition"
+          >
+            Back to Game
+          </a>
+        </div>
       </div>
     </div>
   );

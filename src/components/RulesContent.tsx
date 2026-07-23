@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Shield, Repeat, Sparkles, CheckCircle2, Play, ArrowRight } from 'lucide-react';
+import { BookOpen, Shield, Repeat, Sparkles, CheckCircle2, Play, ArrowRight, Home } from 'lucide-react';
 import type { GameVariant } from '../lib/types';
 
 const variantData: Record<GameVariant, {
@@ -164,8 +164,15 @@ export const RulesContent: React.FC = () => {
                 </ul>
               </div>
 
-              {/* Play Button */}
-              <div className="pt-4 border-t border-[#ebebeb]">
+              {/* Play Button & Home */}
+              <div className="pt-4 border-t border-[#ebebeb] flex items-center justify-between">
+                <a
+                  href="/"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#ebebeb] px-4 py-2.5 text-xs font-medium text-[#171717] hover:bg-[#f5f5f5] transition"
+                >
+                  <Home className="h-3.5 w-3.5" />
+                  Back to Home
+                </a>
                 <a
                   href={`/${variant}`}
                   className="inline-flex items-center gap-2 rounded-lg bg-[#171717] px-5 py-2.5 text-xs font-medium text-white hover:bg-black transition-all shadow-sm active:scale-98"
