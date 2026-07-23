@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, Trophy, RefreshCcw, Award, Percent } from 'lucide-react';
+import { X, Trophy, RefreshCcw } from 'lucide-react';
 import type { GameStats } from '../lib/types';
 
 interface StatsDrawerProps {

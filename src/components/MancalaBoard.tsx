@@ -28,7 +28,6 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
   // ---- Game config state (locked once game starts) ----
   const [mode, setMode] = useState<GameMode>('pvc');
   const [difficulty, setDifficulty] = useState<Difficulty>('medium');
-  const [firstPlayer, setFirstPlayer] = useState<Player>(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [showSetup, setShowSetup] = useState(true);
 
@@ -93,7 +92,6 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
   // Handle setup dialog confirmation — starts the game with locked settings
   const handleSetupStart = useCallback((chosenMode: GameMode, chosenDifficulty: Difficulty) => {
     // Reset to defaults
-    setFirstPlayer(0);
     setMode(chosenMode);
     setDifficulty(chosenDifficulty);
     setGameStarted(true);
@@ -432,7 +430,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
       setActiveSowPit(null);
       setIsCpuThinking(false);
       if (finalState.isGameOver) handleGameOver(finalState);
-    } catch (error) {
+            } catch {
       setIsSowing(false);
       setActiveSowPit(null);
       setIsCpuThinking(false);
@@ -475,7 +473,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
               } else {
                 setIsCpuThinking(false);
               }
-            } catch (error) {
+    } catch {
               setIsCpuThinking(false);
             }
           }

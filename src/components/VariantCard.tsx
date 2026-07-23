@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Shield, Repeat, Sparkles, ArrowRight } from 'lucide-react';
+import { Shield, Repeat, Sparkles, ArrowRight } from 'lucide-react';
 import type { GameVariant } from '../lib/types';
 
 interface VariantCardProps {

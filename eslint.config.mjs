@@ -5,6 +5,9 @@ import react from "eslint-plugin-react";
 import astro from "eslint-plugin-astro";
 
 export default [
+  {
+    ignores: ["dist/**", ".astro/**", "node_modules/**"]
+  },
   js.configs.recommended,
   {
     languageOptions: {
@@ -19,6 +22,18 @@ export default [
         process: "readonly",
         __dirname: "readonly",
         module: "readonly",
+        document: "readonly",
+        window: "readonly",
+        localStorage: "readonly",
+        Worker: "readonly",
+        URL: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
+        HTMLElement: "readonly",
+        HTMLDivElement: "readonly",
+        self: "readonly",
+        MessageEvent: "readonly",
+        AudioContext: "readonly",
       },
     },
     plugins: {
@@ -43,6 +58,8 @@ export default [
     languageOptions: {
       parser: astro.parser,
     },
-    rules: {},
+    rules: {
+      "react/no-unknown-property": "off",
+    },
   },
 ];

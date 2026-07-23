@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Volume2, VolumeX, HelpCircle, Trophy, RefreshCw } from 'lucide-react';
 import { soundFx } from '../lib/sound';
-import type { GameVariant } from '../lib/types';
 
 interface NavbarProps {
   currentVariant?: string;

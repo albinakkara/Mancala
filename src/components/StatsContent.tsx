@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Trophy, RefreshCcw, Award, Percent, BarChart3, TrendingUp, Home } from 'lucide-react';
+import { Trophy, RefreshCcw, Home } from 'lucide-react';
 import type { GameStats } from '../lib/types';
 
 export const StatsContent: React.FC = () => {
