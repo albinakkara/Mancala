@@ -4,7 +4,6 @@ import type { GameVariant, GameMode, Difficulty, BoardState, Player } from '../l
 import { createInitialKalahState, makeKalahMove, KALAH_P0_STORE, KALAH_P1_STORE } from '../lib/kalah';
 import { createInitialAvalancheState, makeAvalancheMove } from '../lib/avalanche';
 import { createInitialOwareState, makeOwareMove } from '../lib/oware';
-import { getBestCpuMove } from '../lib/ai';
 import { soundFx } from '../lib/sound';
 import { WinnerPopup } from './WinnerPopup';
 import { GameControls } from './GameControls';
@@ -55,10 +54,17 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
   const isMounted = useRef(true);
   const boardRef = useRef<HTMLDivElement>(null);
   const thinkingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cpuWorkerRef = useRef<Worker | null>(null);
+  const cpuRequestIdRef = useRef<number>(0);
 
   useEffect(() => {
     isMounted.current = true;
-    return () => { isMounted.current = false; };
+    // Initialize CPU worker
+    cpuWorkerRef.current = new Worker(new URL('../workers/ai.worker.ts', import.meta.url), { type: 'module' });
+    return () => { 
+      isMounted.current = false; 
+      cpuWorkerRef.current?.terminate();
+    };
   }, []);
 
   // ---- Helpers ----
@@ -451,19 +457,34 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
     }
     setIsCpuThinking(false);
 
-    if (mode === 'pvc' && gameState.turn === 1 && !gameState.isGameOver && !isSowing) {
+    const worker = cpuWorkerRef.current;
+
+    if (mode === 'pvc' && gameState.turn === 1 && !gameState.isGameOver && !isSowing && worker) {
       thinkingTimerRef.current = setTimeout(() => {
         if (!isMounted.current || gameState.isGameOver || isSowing) return;
         setIsCpuThinking(true);
-        requestAnimationFrame(() => {
-          if (!isMounted.current) return;
-          const cpuMove = getBestCpuMove(gameState, variant, difficulty);
-          if (cpuMove !== null) {
-            executeAnimatedMove(cpuMove, gameState);
-          } else {
-            setIsCpuThinking(false);
-          }
+        const requestId = ++cpuRequestIdRef.current;
+        worker.postMessage({
+          type: 'GET_BEST_MOVE',
+          state: gameState,
+          variant,
+          difficulty,
+          id: requestId,
         });
+
+        const handleMessage = (event: MessageEvent) => {
+          const response = event.data;
+          if (response.type === 'BEST_MOVE' && response.id === requestId) {
+            worker.removeEventListener('message', handleMessage);
+            if (!isMounted.current) return;
+            if (response.move !== null) {
+              executeAnimatedMove(response.move, gameState);
+            } else {
+              setIsCpuThinking(false);
+            }
+          }
+        };
+        worker.addEventListener('message', handleMessage);
       }, 500);
     }
 

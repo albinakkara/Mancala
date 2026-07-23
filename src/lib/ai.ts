@@ -4,12 +4,31 @@ import { getLegalAvalancheMoves, makeAvalancheMove } from './avalanche';
 import { getLegalOwareMoves, makeOwareMove, OWARE_P1_PITS, OWARE_P0_PITS } from './oware';
 
 const CPU_PLAYER: Player = 1;
-
-// ── Node budget for performance safety ──
-// Hard mode will stop searching if it exceeds this many nodes in a single turn.
-// This guarantees the UI never freezes regardless of position complexity.
 const NODE_BUDGET_HARD = 8_000;
-let nodeCount = 0;
+
+function createMinimaxEngine() {
+  let nodeCount = 0;
+
+  function resetNodeCount() {
+    nodeCount = 0;
+  }
+
+  function incrementNodeCount() {
+    nodeCount++;
+  }
+
+  function getNodeCount() {
+    return nodeCount;
+  }
+
+  function checkBudget() {
+    return nodeCount > NODE_BUDGET_HARD;
+  }
+
+  return { resetNodeCount, incrementNodeCount, getNodeCount, checkBudget };
+}
+
+const minimaxEngine = createMinimaxEngine();
 
 export function getLegalMovesForVariant(state: BoardState, variant: GameVariant, player: Player): number[] {
   if (variant === 'kalah') return getLegalKalahMoves(state, player);
@@ -45,7 +64,7 @@ export function getBestCpuMove(
     //   - Simple positions → deeper search (depth 5-6+)
     //   - Complex positions → shallower search (depth 2-3)
     //   - NEVER freezes the UI
-    nodeCount = 0;
+    minimaxEngine.resetNodeCount();
     return selectHardMove(state, variant, legalMoves);
   }
 }
@@ -129,13 +148,13 @@ function selectHardMove(
   for (let d = 2; d <= maxDepth; d++) {
     // Check if we already exceeded the budget from a previous iteration
     // (unlikely since each iteration starts fresh, but safe)
-    nodeCount = 0;
+    minimaxEngine.resetNodeCount();
     let currentBestMove = orderedMoves[0];
     let currentBestValue = -Infinity;
     let budgetExceeded = false;
 
     for (const move of orderedMoves) {
-      if (nodeCount > NODE_BUDGET_HARD) {
+      if (minimaxEngine.checkBudget()) {
         budgetExceeded = true;
         break;
       }
@@ -263,8 +282,8 @@ function minimax(
   useOrdering: boolean
 ): number {
   // Budget check
-  nodeCount++;
-  if (nodeCount > NODE_BUDGET_HARD) {
+  minimaxEngine.incrementNodeCount();
+  if (minimaxEngine.checkBudget()) {
     return evaluateBoard(state, variant);
   }
 
@@ -287,7 +306,7 @@ function minimax(
   if (isMaximizing) {
     let maxEval = -Infinity;
     for (const move of moves) {
-      if (nodeCount > NODE_BUDGET_HARD) break;
+      if (minimaxEngine.checkBudget()) break;
       const nextState = makeMoveForVariant(state, variant, move);
       const nextDepth = depth - 1;
       const evalVal = minimax(nextState, variant, nextDepth, alpha, beta, nextState.turn === CPU_PLAYER, useOrdering);
@@ -299,7 +318,7 @@ function minimax(
   } else {
     let minEval = Infinity;
     for (const move of moves) {
-      if (nodeCount > NODE_BUDGET_HARD) break;
+      if (minimaxEngine.checkBudget()) break;
       const nextState = makeMoveForVariant(state, variant, move);
       const nextDepth = depth - 1;
       const evalVal = minimax(nextState, variant, nextDepth, alpha, beta, nextState.turn === CPU_PLAYER, useOrdering);
