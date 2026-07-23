@@ -104,6 +104,13 @@ export const GameSetupDialog: React.FC<GameSetupDialogProps> = ({
                         <Play className="h-4 w-4" />
                         Start Game
                     </button>
+
+                    <a
+                        href="/"
+                        className="inline-block mt-4 text-xs text-[#888888] hover:text-[#171717] transition-colors duration-200 underline underline-offset-2"
+                    >
+                        ← Back to Home
+                    </a>
                 </div>
             </div>
         </div>
