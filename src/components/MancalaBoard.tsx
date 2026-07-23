@@ -162,7 +162,23 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
   // ---- Undo ----
   const handleUndo = useCallback(() => {
     if (isCpuThinking || isSowing || undoStack.length === 0) return;
-    const stepsBack = mode === 'pvc' ? 2 : 1;
+
+    let stepsBack = 1;
+    if (mode === 'pvc') {
+      // For CPU games, scan backwards through the undo stack to find the last state
+      // where it was Player 1's turn (turn === 0). This properly handles cases where
+      // the CPU got extra turns — we undo ALL CPU moves back to the player's turn.
+      let foundIndex = -1;
+      for (let i = undoStack.length - 1; i >= 0; i--) {
+        if (undoStack[i].turn === 0) {
+          foundIndex = i;
+          break;
+        }
+      }
+      if (foundIndex === -1) return; // No player-turn state found
+      stepsBack = undoStack.length - foundIndex;
+    }
+
     if (undoStack.length < stepsBack) return;
     const restoredState = undoStack[undoStack.length - stepsBack];
     setUndoStack(undoStack.slice(0, undoStack.length - stepsBack));
@@ -183,7 +199,11 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
     setCaptureStoreGlow(false);
   }, [mode, undoStack, isCpuThinking, isSowing]);
 
-  const canUndo = undoStack.length > 0 && !isCpuThinking && !isSowing && !gameState.isGameOver;
+  const canUndo = !isCpuThinking && !isSowing && !gameState.isGameOver && (
+    mode === 'pvp'
+      ? undoStack.length > 0
+      : undoStack.some(s => s.turn === 0)
+  );
 
   // ---- Build sowing sequence for animation ----
   const buildSowSequence = useCallback(

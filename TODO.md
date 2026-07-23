@@ -28,3 +28,16 @@
 - No changes needed (already accepts `onNewGame` prop)
 - The handler passed from MancalaBoard now triggers setup dialog instead of direct restart
 
+---
+
+## Fix: CPU Extra Turn Undo ✅ (2024)
+
+### Problem
+When playing against the CPU, if the CPU gets extra turns (by landing in its store in Kalah/Avalanche), clicking Undo would step back only 2 states, potentially restoring to a state where it was still the CPU's turn — forcing the player to undo again.
+
+### Fix Applied
+Modified `handleUndo` in `MancalaBoard.tsx`:
+- **Before**: Used fixed `stepsBack = 2` for PvC mode, assuming CPU always makes exactly 1 move per turn.
+- **After**: For PvC mode, the undo stack is scanned backwards to find the **last state where it was Player 1's turn (`turn === 0`)**. This dynamically undoes ALL consecutive CPU moves (including extra turns) and restores the player's turn.
+- Also updated `canUndo` to check if any state in the undo stack has `turn === 0` for PvC mode, ensuring the Undo button is properly grayed out when there's nothing to undo back to the player.
+
