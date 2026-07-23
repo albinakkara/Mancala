@@ -42,12 +42,6 @@ export const Footer: React.FC = () => {
               Statistics
             </a>
           </div>
-
-          {/* Vercel Badge */}
-          <div className="flex items-center gap-2 font-mono-code text-[11px] text-[#888888]">
-            <span>DESIGNED LIKE VERCEL</span>
-            <span className="h-2 w-2 rounded-full bg-[#00dfd8]" />
-          </div>
         </div>
 
         <div className="mt-8 pt-6 border-t border-[#ebebeb] flex flex-col sm:flex-row items-center justify-between text-xs text-[#888888]">
