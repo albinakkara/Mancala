@@ -289,53 +289,53 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
       if (!isMounted.current) return;
       setClusterAnimClass('');
 
-      // Sow each seed with animation
-      const updatedPits = [...basePits];
-      for (let i = 0; i < seq.length; i++) {
-        if (!isMounted.current) return;
-        const step = seq[i];
-        const { pit: targetPit, seedsLeft: remaining, isAvalanchePickup } = step;
+        // Sow each seed with animation
+        const updatedPits = [...basePits];
+        for (let i = 0; i < seq.length; i++) {
+            if (!isMounted.current) return;
+            const step = seq[i];
+            const { pit: targetPit, seedsLeft: remaining, isAvalanchePickup } = step;
 
-        const toPos = getPitCenter(targetPit);
-        if (toPos) {
-          setClusterPos({ x: toPos.x, y: toPos.y });
-          setClusterAnimClass('animate-cluster-glide');
-          soundFx.playSow();
-        }
-        await delay(120);
-        if (!isMounted.current) return;
+            const toPos = getPitCenter(targetPit);
+            if (toPos) {
+                setClusterPos({ x: toPos.x, y: toPos.y });
+                setClusterAnimClass('animate-cluster-glide');
+                soundFx.playSow();
+            }
+            await delay(350);
+            if (!isMounted.current) return;
 
-        if (isAvalanchePickup) {
-          updatedPits[targetPit] = 0;
-          setGameState((prev) => ({
-            ...prev,
-            pits: [...updatedPits],
-            lastSownPit: targetPit,
-            statusMessage: `Avalanche! Hand collects ${remaining + 1} seeds from Pit ${targetPit + 1}!`,
-          }));
-          setClusterSeedCount(remaining);
-          setClusterAnimClass('animate-avalanche-popup');
-          await delay(300);
-          if (!isMounted.current) return;
-          setClusterAnimClass('');
-        } else {
-          updatedPits[targetPit] += 1;
-          setGameState((prev) => ({
-            ...prev,
-            pits: [...updatedPits],
-            lastSownPit: targetPit,
-            statusMessage: `Dropping seed into Pit ${targetPit + 1}...`,
-          }));
-          setClusterSeedCount(remaining);
-          setClusterAnimClass('');
-          setCatchingPit(targetPit);
-          setTimeout(() => {
-            if (isMounted.current) setCatchingPit(null);
-          }, 350);
-          await delay(350);
-          if (!isMounted.current) return;
+            if (isAvalanchePickup) {
+                updatedPits[targetPit] = 0;
+                setGameState((prev) => ({
+                    ...prev,
+                    pits: [...updatedPits],
+                    lastSownPit: targetPit,
+                    statusMessage: `Avalanche! Hand collects ${remaining + 1} seeds from Pit ${targetPit + 1}!`,
+                }));
+                setClusterSeedCount(remaining);
+                setClusterAnimClass('animate-avalanche-popup');
+                await delay(300);
+                if (!isMounted.current) return;
+                setClusterAnimClass('');
+            } else {
+                updatedPits[targetPit] += 1;
+                setGameState((prev) => ({
+                    ...prev,
+                    pits: [...updatedPits],
+                    lastSownPit: targetPit,
+                    statusMessage: `Dropping seed into Pit ${targetPit + 1}...`,
+                }));
+                setClusterSeedCount(remaining);
+                setClusterAnimClass('');
+                setCatchingPit(targetPit);
+                setTimeout(() => {
+                    if (isMounted.current) setCatchingPit(null);
+                }, 350);
+                await delay(350);
+                if (!isMounted.current) return;
+            }
         }
-      }
 
       // Hand empty animation
       if (!isMounted.current) return;

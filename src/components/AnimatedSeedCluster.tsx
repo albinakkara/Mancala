@@ -37,34 +37,24 @@ export const AnimatedSeedCluster: React.FC<AnimatedSeedClusterProps> = ({
     captureAnim,
 }) => {
     const renderSeedCluster = () => {
-        if (!clusterVisible) return null;
+        if (!clusterVisible || clusterSeedCount === 0) return null;
         return (
             <div
-                className={`absolute pointer-events-none z-40 ${clusterAnimClass}`}
+                className={`absolute pointer-events-none z-40 flex flex-wrap items-center justify-center gap-[1px] p-0.5 sm:p-1 ${clusterAnimClass}`}
                 style={{
                     left: clusterPos.x,
                     top: clusterPos.y,
-                    width: 28,
-                    height: 28,
                     transform: 'translate(-50%,-50%)',
                     transition:
                         'left 0.3s cubic-bezier(0.2,0,0,1), top 0.3s cubic-bezier(0.2,0,0,1)',
                 }}
             >
-                <div className="absolute inset-0.5 flex items-center justify-center flex-wrap gap-[1px] p-0.5">
-                    {Array.from({ length: Math.min(clusterSeedCount, 8) }).map((_, i) => (
-                        <span
-                            key={i}
-                            className="rounded-full"
-                            style={{ width: 5, height: 5, backgroundColor: '#171717' }}
-                        />
-                    ))}
-                    {clusterSeedCount > 8 && (
-                        <span className="absolute -top-0.5 -right-0.5 text-[5px] font-bold text-white font-mono-code bg-black rounded-full px-[1px] leading-none">
-                            +{clusterSeedCount - 8}
-                        </span>
-                    )}
-                </div>
+                {Array.from({ length: clusterSeedCount }).map((_, i) => (
+                    <span
+                        key={i}
+                        className="rounded-full bg-[#171717] h-[6px] w-[6px] sm:h-[8px] sm:w-[8px] md:h-[10px] md:w-[10px]"
+                    />
+                ))}
             </div>
         );
     };
