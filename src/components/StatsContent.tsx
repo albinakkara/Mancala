@@ -98,7 +98,7 @@ export const StatsContent: React.FC = () => {
             kalah: 'Kalah',
             avalanche: 'Avalanche Mancala',
             oware: 'Oware / Awale',
-          };
+          } as const;
           const colors = {
             kalah: 'text-[#0070f3]',
             avalanche: 'text-[#7928ca]',
