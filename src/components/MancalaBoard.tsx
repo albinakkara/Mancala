@@ -10,6 +10,7 @@ import { GameControls } from './GameControls';
 import { GameSetupDialog } from './GameSetupDialog';
 import { BoardGrid } from './BoardGrid';
 import { AnimatedSeedCluster, type CaptureSeed, type CaptureAnimState } from './AnimatedSeedCluster';
+import { GameSpeedControl } from './GameSpeedControl';
 import { MoveHistoryPanel } from './MoveHistoryPanel';
 
 interface MancalaBoardProps {
@@ -51,6 +52,12 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
   const [clusterAnimClass, setClusterAnimClass] = useState('');
   const [clusterVisible, setClusterVisible] = useState(false);
 
+  const [gameSpeed, setGameSpeed] = useState(1);
+  const gameSpeedRef = useRef(gameSpeed);
+  useEffect(() => {
+    gameSpeedRef.current = gameSpeed;
+  }, [gameSpeed]);
+
   const isMounted = useRef(true);
   const boardRef = useRef<HTMLDivElement>(null);
   const thinkingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -68,7 +75,8 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
   }, []);
 
   // ---- Helpers ----
-  const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+  const getSpeed = () => gameSpeedRef.current;
+  const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms / getSpeed()));
 
   const getPitCenter = useCallback((pitIndex: number): { x: number; y: number } | null => {
     if (!boardRef.current) return null;
@@ -329,9 +337,10 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
                 setClusterSeedCount(remaining);
                 setClusterAnimClass('');
                 setCatchingPit(targetPit);
-                setTimeout(() => {
-                    if (isMounted.current) setCatchingPit(null);
-                }, 350);
+                    const timeout = 350 / getSpeed();
+                    setTimeout(() => {
+                        if (isMounted.current) setCatchingPit(null);
+                    }, timeout);
                 await delay(350);
                 if (!isMounted.current) return;
             }
@@ -378,7 +387,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
                 startY: fromPos.y + oy,
                 deltaX: dx + ox,
                 deltaY: dy + oy,
-                delay: p * 180 + s * 120 + Math.random() * 60,
+                                delay: (p * 180 + s * 120 + Math.random() * 60) / getSpeed(),
                 player: currentPlayer,
               });
               seedIdx++;
@@ -401,11 +410,10 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
                   `[data-capture-seed="${s.id}"]`
                 ) as HTMLElement | null;
                 if (!el) return;
-                el.style.transition =
-                  'transform 0.9s cubic-bezier(0.1, 0.7, 0.2, 1), opacity 0.3s ease-in';
+                el.style.transition = `transform ${0.9 / getSpeed()}s cubic-bezier(0.1, 0.7, 0.2, 1), opacity ${0.3 / getSpeed()}s ease-in`;
                 el.style.transform = `translate(${s.deltaX}px, ${s.deltaY}px) scale(0.3)`;
                 el.style.opacity = '0';
-              }, s.delay);
+              }, s.delay / getSpeed());
             });
             const lastDelay = seeds.reduce((max, s) => Math.max(max, s.delay), 0);
             await delay(lastDelay + 1100);
@@ -473,7 +481,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
           }
         };
         worker.addEventListener('message', handleMessage);
-      }, 500);
+      }, 500 / getSpeed());
     }
 
     return () => {
@@ -581,13 +589,14 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
 
       {/* Board Grid with Animation Overlays */}
       {gameStarted && (
-        <div className="relative" ref={boardRef}>
+        <div className="relative" ref={boardRef} style={{ '--game-speed': gameSpeed } as React.CSSProperties}>
           <AnimatedSeedCluster
             clusterVisible={clusterVisible}
             clusterPos={clusterPos}
             clusterSeedCount={clusterSeedCount}
             clusterAnimClass={clusterAnimClass}
             captureAnim={captureAnim}
+            gameSpeed={gameSpeed}
           />
           <BoardGrid
             variant={variant}
@@ -601,6 +610,16 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
             catchingPit={catchingPit}
             activeSowPit={activeSowPit}
             onPitClick={handlePitClick}
+          />
+        </div>
+      )}
+
+      {/* Game Speed Control */}
+      {gameStarted && (
+        <div className="flex justify-center">
+          <GameSpeedControl
+            speed={gameSpeed}
+            onSpeedChange={setGameSpeed}
           />
         </div>
       )}

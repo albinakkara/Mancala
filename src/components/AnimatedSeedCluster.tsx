@@ -27,6 +27,7 @@ interface AnimatedSeedClusterProps {
     clusterSeedCount: number;
     clusterAnimClass: string;
     captureAnim: CaptureAnimState;
+    gameSpeed: number;
 }
 
 export const AnimatedSeedCluster: React.FC<AnimatedSeedClusterProps> = ({
@@ -35,6 +36,7 @@ export const AnimatedSeedCluster: React.FC<AnimatedSeedClusterProps> = ({
     clusterSeedCount,
     clusterAnimClass,
     captureAnim,
+    gameSpeed,
 }) => {
     const renderSeedCluster = () => {
         if (!clusterVisible || clusterSeedCount === 0) return null;
@@ -46,7 +48,7 @@ export const AnimatedSeedCluster: React.FC<AnimatedSeedClusterProps> = ({
                     top: clusterPos.y,
                     transform: 'translate(-50%,-50%)',
                     transition:
-                        'left 0.3s cubic-bezier(0.2,0,0,1), top 0.3s cubic-bezier(0.2,0,0,1)',
+                        `left ${0.3 / gameSpeed}s cubic-bezier(0.2,0,0,1), top ${0.3 / gameSpeed}s cubic-bezier(0.2,0,0,1)`,
                 }}
             >
                 {Array.from({ length: clusterSeedCount }).map((_, i) => (
