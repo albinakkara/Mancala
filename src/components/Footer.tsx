@@ -17,7 +17,7 @@ export const Footer: React.FC = () => {
               </span>
             </div>
             <p className="text-xs text-[#888888]">
-              Play Kalah, Avalanche Mancala, and Oware / Awale online. Free, zero ads.
+              Play Kalah, Avalanche Mancala, and Oware / Awale online.
             </p>
           </div>
 
