@@ -1,0 +1,63 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Footer } from '../components/Footer';
+import { Navbar } from '../components/Navbar';
+---
+
+<Layout
+  title="Terms & Conditions — Online Mancala"
+  description="Read the Terms & Conditions for using Online Mancala. Understand your rights and responsibilities."
+>
+  <div class="flex flex-col min-h-screen bg-white">
+    <Navbar />
+
+    <section class="py-16 bg-white">
+      <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-[#171717] mb-8">
+          Terms &amp; Conditions
+        </h1>
+
+        <div class="prose prose-lg text-[#4d4d4d] space-y-6">
+          <p class="text-sm font-medium text-[#888888]">Last updated: July 2026</p>
+
+          <h2 class="text-xl font-semibold text-[#171717]">1. Acceptance of Terms</h2>
+          <p>
+            By accessing or using Online Mancala, you agree to be bound by these Terms &amp; Conditions. If you do not agree, please do not use the service.
+          </p>
+
+          <h2 class="text-xl font-semibold text-[#171717]">2. Use License</h2>
+          <p>
+            Permission is granted to use Online Mancala for personal, non-commercial purposes only. You may not modify, distribute, or exploit the service without our prior written consent.
+          </p>
+
+          <h2 class="text-xl font-semibold text-[#171717]">3. User Conduct</h2>
+          <p>
+            You agree to use the platform lawfully and responsibly. Any attempt to abuse, harm, or disrupt the platform is prohibited.
+          </p>
+
+          <h2 class="text-xl font-semibold text-[#171717]">4. Disclaimer</h2>
+          <p>
+            The service is provided on an "as is" and "as available" basis. We make no warranties, express or implied, regarding the platform's reliability, accuracy, or availability.
+          </p>
+
+          <h2 class="text-xl font-semibold text-[#171717]">5. Limitation of Liability</h2>
+          <p>
+            In no event shall Online Mancala be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the service.
+          </p>
+
+          <h2 class="text-xl font-semibold text-[#171717]">6. Changes to Terms</h2>
+          <p>
+            We may revise these terms from time to time. Continued use of the service after changes constitutes acceptance of the updated terms.
+          </p>
+
+          <h2 class="text-xl font-semibold text-[#171717]">7. Contact</h2>
+          <p>
+            For questions about these Terms &amp; Conditions, please reach out via our <a href="/contact-us" class="text-[#0070f3] underline font-medium">Contact Us</a> page.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <Footer />
+  </div>
+</Layout>

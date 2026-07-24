@@ -1,0 +1,56 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Footer } from '../components/Footer';
+import { Navbar } from '../components/Navbar';
+---
+
+<Layout
+  title="Contact Us — Online Mancala"
+  description="Get in touch with the Online Mancala team. Send us your feedback, questions, or support requests."
+>
+  <div class="flex flex-col min-h-screen bg-white">
+    <Navbar />
+
+    <section class="py-16 bg-white">
+      <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-[#171717] mb-8">
+          Contact Us
+        </h1>
+
+        <div class="prose prose-lg text-[#4d4d4d] space-y-6">
+          <p class="text-sm font-medium text-[#888888]">Last updated: July 2026</p>
+
+          <p>
+            We would love to hear from you. Whether you have a question, feedback, or a technical issue, reach out and our team will get back to you as soon as possible.
+          </p>
+
+          <h2 class="text-xl font-semibold text-[#171717]">Email</h2>
+          <p>
+            Send us a message at <a href="mailto:support@onlinemancala.com" class="text-[#0070f3] underline font-medium">support@onlinemancala.com</a> and we will respond promptly.
+          </p>
+
+          <h2 class="text-xl font-semibold text-[#171717]">Feedback</h2>
+          <p>
+            Have suggestions for new Mancala variants, AI improvements, or features? We value community input and actively incorporate player feedback into our roadmap.
+          </p>
+
+          <h2 class="text-xl font-semibold text-[#171717]">Bug Reports</h2>
+          <p>
+            If you encounter any bugs or performance issues, please include your device, browser, and device OS in your message to help our team reproduce and fix the problem quickly.
+          </p>
+
+          <h2 class="text-xl font-semibold text-[#171717]">Business Inquiries</h2>
+          <p>
+            For partnership, collaboration, or commercial inquiries, please use the email above and include the subject line "Business Inquiry."
+          </p>
+
+          <p>
+            You can also explore our <a href="/about-us" class="text-[#0070f3] underline font-medium">About Us</a> page to learn more about Online Mancala.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <Footer />
+  </div>
+</Layout>

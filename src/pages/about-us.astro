@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Footer } from '../components/Footer';
+import { Navbar } from '../components/Navbar';
+---
+
+<Layout
+  title="About Us — Online Mancala"
+  description="Learn about Online Mancala and our mission to bring the classic Mancala board game to the modern web."
+>
+  <div class="flex flex-col min-h-screen bg-white">
+    <Navbar />
+
+    <section class="py-16 bg-white">
+      <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-[#171717] mb-8">
+          About Us
+        </h1>
+
+        <div class="prose prose-lg text-[#4d4d4d] space-y-6">
+          <p class="text-sm font-medium text-[#888888]">Last updated: July 2026</p>
+
+          <h2 class="text-xl font-semibold text-[#171717]">Our Mission</h2>
+          <p>
+            Online Mancala was created to make the timeless Mancala board game accessible to everyone. Our goal is to provide a beautiful, intuitive, and fast digital Mancala experience that works seamlessly on desktop, tablet, and mobile—without requiring downloads or registrations.
+          </p>
+
+          <h2 class="text-xl font-semibold text-[#171717]">What We Offer</h2>
+          <p>
+            We support three classic Mancala variants: <strong>Kalah</strong>, <strong>Avalanche</strong>, and <strong>Oware / Awale</strong>. Players can enjoy these variants against three AI difficulty levels or challenge friends in 2-player pass-and-play mode.
+          </p>
+
+          <h2 class="text-xl font-semibold text-[#171717]">Our Values</h2>
+          <ul class="list-disc pl-6 space-y-2">
+            <li><strong>Accessibility:</strong> A free, no-registration experience for everyone.</li>
+            <li><strong>Quality:</strong> Smooth performance and polished animations.</li>
+            <li><strong>Respect:</strong> We value user privacy and do not monetize personal data.</li>
+            <li><strong>Community:</strong> Built for Mancala enthusiasts worldwide.</li>
+          </ul>
+
+          <h2 class="text-xl font-semibold text-[#171717]">Get in Touch</h2>
+          <p>
+            We would love to hear from you. If you have feedback, suggestions, or questions, please visit our <a href="/contact-us" class="text-[#0070f3] underline font-medium">Contact Us</a> page.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <Footer />
+  </div>
+</Layout>

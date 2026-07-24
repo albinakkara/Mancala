@@ -19,7 +19,7 @@ import { Play, Shield, Repeat, Check } from 'lucide-react';
         <div class="h-full w-full bg-gradient-to-r from-[#007cf0] via-[#7928ca] to-[#ff0080]" />
       </div>
 
-      <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+      <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-left">
         <!-- Badge -->
         <div class="inline-flex items-center gap-2 rounded-full border border-[#ebebeb] bg-white px-3 py-1 shadow-sm mb-6">
           <span class="h-2 w-2 rounded-full bg-[#0070f3] animate-pulse" />
@@ -55,7 +55,7 @@ import { Play, Shield, Repeat, Check } from 'lucide-react';
         </div>
 
         <!-- Features Highlights -->
-        <div class="mt-10 flex flex-wrap items-center justify-center gap-6 text-xs text-[#666] font-mono-code">
+        <div class="mt-10 flex flex-wrap items-center justify-start gap-6 text-xs text-[#666] font-mono-code">
           <div class="flex items-center gap-1.5">
              <Check className="h-4 w-4 text-[#0070f3]" />
              3 Mancala Game Variants
@@ -73,6 +73,74 @@ import { Play, Shield, Repeat, Check } from 'lucide-react';
              No Registration Required
           </div>
         </div>
+
+        <div class="mt-4 flex flex-wrap items-center justify-start gap-4 text-xs text-[#888888]">
+          <a href="/about-us" class="hover:text-black transition">About Us</a>
+          <span class="text-[#ebebeb]">|</span>
+          <a href="/contact-us" class="hover:text-black transition">Contact Us</a>
+          <span class="text-[#ebebeb]">|</span>
+          <a href="/privacy-policy" class="hover:text-black transition">Privacy Policy</a>
+          <span class="text-[#ebebeb]">|</span>
+          <a href="/terms-and-conditions" class="hover:text-black transition">Terms &amp; Conditions</a>
+        </div>
+
+        <!-- MORE ABOUT LINKS SECTION -->
+        <div class="mt-12 mb-8 max-w-3xl mx-auto">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <a href="/about-us" class="group flex items-center justify-between rounded-xl border border-[#ebebeb] bg-white p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl">
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#7928ca]/10">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7928ca" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <div>
+                  <h3 class="text-sm font-semibold text-[#171717] group-hover:text-black transition">About Us</h3>
+                  <p class="text-xs text-[#888888]">Discover our mission and values.</p>
+                </div>
+              </div>
+              <svg class="h-4 w-4 text-[#888888] group-hover:text-black transition" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </a>
+
+            <a href="/contact-us" class="group flex items-center justify-between rounded-xl border border-[#ebebeb] bg-white p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl">
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#0070f3]/10">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0070f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                </div>
+                <div>
+                  <h3 class="text-sm font-semibold text-[#171717] group-hover:text-black transition">Contact Us</h3>
+                  <p class="text-xs text-[#888888]">Send feedback or get support.</p>
+                </div>
+              </div>
+              <svg class="h-4 w-4 text-[#888888] group-hover:text-black transition" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </a>
+
+            <a href="/privacy-policy" class="group flex items-center justify-between rounded-xl border border-[#ebebeb] bg-white p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl">
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#eb367f]/10">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#eb367f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+                </div>
+                <div>
+                  <h3 class="text-sm font-semibold text-[#171717] group-hover:text-black transition">Privacy Policy</h3>
+                  <p class="text-xs text-[#888888]">How we protect your data.</p>
+                </div>
+              </div>
+              <svg class="h-4 w-4 text-[#888888] group-hover:text-black transition" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </a>
+
+            <a href="/terms-and-conditions" class="group flex items-center justify-between rounded-xl border border-[#ebebeb] bg-white p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl">
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#00dfd8]/10">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00dfd8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                </div>
+                <div>
+                  <h3 class="text-sm font-semibold text-[#171717] group-hover:text-black transition">Terms &amp; Conditions</h3>
+                  <p class="text-xs text-[#888888]">Read our usage terms.</p>
+                </div>
+              </div>
+              <svg class="h-4 w-4 text-[#888888] group-hover:text-black transition" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </a>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -121,6 +189,78 @@ import { Play, Shield, Repeat, Check } from 'lucide-react';
             isActive={false}
             onSelect={() => {}}
           />
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGES LINKS SECTION -->
+    <section class="py-12 bg-white border-b border-[#ebebeb]">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="mb-8 text-center">
+          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-[#171717]">
+            More About Online Mancala
+          </h2>
+          <p class="mt-1 text-sm text-[#888888]">
+            Learn more about our platform, get in touch, and review our legal information.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <a
+            href="/about-us"
+            class="group flex flex-col items-center text-center rounded-xl border border-[#ebebeb] bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          >
+            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-[#7928ca]/10 mb-4">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7928ca" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <h3 class="text-lg font-semibold text-[#171717] mb-2 group-hover:text-black transition">About Us</h3>
+            <p class="text-sm text-[#888888]">Discover our mission, values, and the team behind Online Mancala.</p>
+          </a>
+
+          <a
+            href="/contact-us"
+            class="group flex flex-col items-center text-center rounded-xl border border-[#ebebeb] bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          >
+            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-[#0070f3]/10 mb-4">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0070f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </div>
+            <h3 class="text-lg font-semibold text-[#171717] mb-2 group-hover:text-black transition">Contact Us</h3>
+            <p class="text-sm text-[#888888]">Send feedback, report bugs, or reach out for business inquiries.</p>
+          </a>
+
+          <a
+            href="/privacy-policy"
+            class="group flex flex-col items-center text-center rounded-xl border border-[#ebebeb] bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          >
+            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-[#eb367f]/10 mb-4">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#eb367f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+            </div>
+            <h3 class="text-lg font-semibold text-[#171717] mb-2 group-hover:text-black transition">Privacy Policy</h3>
+            <p class="text-sm text-[#888888]">Learn how we collect, use, and protect your privacy and data.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- TERMS & CONDITIONS SECTION -->
+    <section class="py-12 bg-white border-b border-[#ebebeb]">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto">
+          <a
+            href="/terms-and-conditions"
+            class="group flex items-center justify-between rounded-xl border border-[#ebebeb] bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          >
+            <div class="flex items-center gap-4">
+              <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-[#00dfd8]/10">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00dfd8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-[#171717] mb-1 group-hover:text-black transition">Terms &amp; Conditions</h3>
+                <p class="text-sm text-[#888888]">Understand your rights and responsibilities when using Online Mancala.</p>
+              </div>
+            </div>
+            <svg class="h-5 w-5 text-[#888888] group-hover:text-black transition" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
         </div>
       </div>
     </section>

@@ -23,23 +23,17 @@ export const Footer: React.FC = () => {
 
           {/* Nav Links */}
           <div className="flex flex-wrap items-center gap-6 text-xs text-[#666]">
-            <a href="/play" className="hover:text-black transition">
-              Play Now
+            <a href="/about-us" className="hover:text-black transition">
+              About Us
             </a>
-            <a href="/kalah" className="hover:text-black transition">
-              Kalah
+            <a href="/contact-us" className="hover:text-black transition">
+              Contact Us
             </a>
-            <a href="/avalanche" className="hover:text-black transition">
-              Avalanche
+            <a href="/privacy-policy" className="hover:text-black transition">
+              Privacy Policy
             </a>
-            <a href="/oware" className="hover:text-black transition">
-              Oware
-            </a>
-            <a href="/rules" className="hover:text-black transition">
-              Rules & Strategy
-            </a>
-            <a href="/stats" className="hover:text-black transition">
-              Statistics
+            <a href="/terms-and-conditions" className="hover:text-black transition">
+              Terms &amp; Conditions
             </a>
           </div>
         </div>
