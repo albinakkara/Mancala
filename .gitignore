@@ -1,24 +1,32 @@
-# build output
-dist/
-
-# generated types
-.astro/
-
 # dependencies
 node_modules/
+
+# build output
+dist/
+.astro/
+
+# environment variables
+.env
+.env.local
+.env.production
+.env.*.local
 
 # logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
 
-# environment variables
-.env
-.env.production
+# test coverage
+coverage/
 
-# macOS-specific files
+# OS files
 .DS_Store
+Thumbs.db
 
-# jetbrains setting folder
+# JetBrains IDE
 .idea/
+
+# CI scratch files (e.g. Vitest screenshots or snapshots)
+*.snap
