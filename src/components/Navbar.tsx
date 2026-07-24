@@ -107,6 +107,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={handleToggleSound}
             title={isMuted ? "Unmute Sound" : "Mute Sound"}
+            aria-label={isMuted ? "Unmute Sound" : "Mute Sound"}
             className="flex h-9 w-9 items-center justify-center rounded-md border border-[#ebebeb] bg-white text-[#171717] hover:bg-[#f5f5f5] transition"
           >
             {isMuted ? (
