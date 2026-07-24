@@ -32,13 +32,18 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://onlinemancala.com');
     <title>{title}</title>
     <meta name="title" content={title} />
     <meta name="description" content={description} />
-    <meta name="keywords" content="mancala, online mancala, kalah, avalanche mancala, oware, awale, board games, play mancala against computer" />
+    <meta name="keywords" content="online mancala, free online mancala, online mancala 2 player, best online mancala game, play online mancala, online mancala with friends, mancala game, mancala board, mancala board game, mancala strategy, kalah mancala, oware mancala, avalanche mancala, mancala instructions, mancala rules" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta property="og:image" content="https://onlinemancala.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Online Mancala Game Board" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:site_name" content="Online Mancala" />
 
     <!-- Twitter -->
@@ -46,6 +51,11 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://onlinemancala.com');
     <meta property="twitter:url" content={canonicalURL} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content="https://onlinemancala.com/og-image.png" />
+    <meta property="twitter:image:alt" content="Online Mancala Game Board" />
+
+    <meta name="author" content="Online Mancala" />
+    <meta name="theme-color" content="#171717" />
 
     <!-- Google Fonts: Inter & Geist Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
