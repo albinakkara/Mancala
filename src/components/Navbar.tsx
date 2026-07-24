@@ -34,9 +34,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Left: Brand & Domain */}
         <div className="flex items-center gap-3">
           <a href="/" className="flex items-center gap-2.5 transition hover:opacity-80">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-black text-white shadow-sm font-mono-code font-bold text-xs tracking-tighter">
-              OM
-            </div>
+            <img src="/favicon.svg" alt="Online Mancala" className="h-8 w-8 rounded-lg shadow-sm" />
             <div className="flex flex-col">
               <span className="text-base font-semibold tracking-tight text-[#171717]">
                 Online Mancala
