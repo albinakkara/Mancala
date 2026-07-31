@@ -17,6 +17,16 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://onlinemancala.com');
 <!doctype html>
 <html lang="en" class="h-full bg-white text-[#171717]">
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q40VXNSXD9"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-Q40VXNSXD9');
+    </script>
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
