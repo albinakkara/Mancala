@@ -2,8 +2,6 @@
 
 Play three Mancala variants — Kalah, Avalanche, and Oware/Awale — against CPU AI or a local friend. Free, no registration required.
 
-![CI](https://github.com/user/repo/actions/workflows/ci.yml/badge.svg)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## Variants
 
@@ -75,7 +73,3 @@ src/
 tests/                  # Vitest unit tests
 public/                 # Static assets served as-is
 ```
-
-## License
-
-MIT
