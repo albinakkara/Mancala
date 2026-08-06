@@ -62,6 +62,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
   const thinkingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cpuWorkerRef = useRef<Worker | null>(null);
   const cpuRequestIdRef = useRef<number>(0);
+  const gameGeneration = useRef(0);
 
   useEffect(() => {
     isMounted.current = true;
@@ -91,6 +92,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
 
   // Handle setup dialog confirmation — starts the game with locked settings
   const handleSetupStart = useCallback((chosenMode: GameMode, chosenDifficulty: Difficulty) => {
+    gameGeneration.current++;
     // Reset to defaults
     setMode(chosenMode);
     setDifficulty(chosenDifficulty);
@@ -118,6 +120,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
 
   // Handle "New Match" — shows setup dialog again
   const handleNewGame = useCallback(() => {
+    gameGeneration.current++;
     setGameStarted(false);
     setShowSetup(true);
     setShowWinnerPopup(false);
@@ -240,10 +243,13 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
   const executeAnimatedMove = useCallback(
     async (pitIndex: number, targetState: BoardState) => {
       if (isSowing || !isMounted.current) return;
+      const gen = gameGeneration.current;
+      if (gen !== gameGeneration.current) return;
       setIsSowing(true);
       setActiveSowPit(pitIndex);
 
       try {
+        if (gen !== gameGeneration.current) return;
         // Save to undo stack
         setUndoStack((prev) => [...prev, targetState]);
 
@@ -281,7 +287,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
       // Pre-position cluster
       setClusterPos({ x: srcPos.x, y: srcPos.y });
       await delay(16);
-      if (!isMounted.current) return;
+      if (!isMounted.current || gen !== gameGeneration.current) return;
 
       setGameState((prev) => ({
         ...prev,
@@ -292,13 +298,13 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
       setClusterAnimClass('animate-cluster-scoop');
       setClusterVisible(true);
       await delay(300);
-      if (!isMounted.current) return;
+      if (!isMounted.current || gen !== gameGeneration.current) return;
       setClusterAnimClass('');
 
         // Sow each seed with animation
         const updatedPits = [...basePits];
         for (let i = 0; i < seq.length; i++) {
-            if (!isMounted.current) return;
+            if (!isMounted.current || gen !== gameGeneration.current) return;
             const step = seq[i];
             const { pit: targetPit, seedsLeft: remaining, isAvalanchePickup } = step;
 
@@ -309,7 +315,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
                 soundFx.playSow();
             }
             await delay(350);
-            if (!isMounted.current) return;
+            if (!isMounted.current || gen !== gameGeneration.current) return;
 
             if (isAvalanchePickup) {
                 updatedPits[targetPit] = 0;
@@ -322,7 +328,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
                 setClusterSeedCount(remaining);
                 setClusterAnimClass('animate-avalanche-popup');
                 await delay(300);
-                if (!isMounted.current) return;
+                if (!isMounted.current || gen !== gameGeneration.current) return;
                 setClusterAnimClass('');
             } else {
                 updatedPits[targetPit] += 1;
@@ -340,15 +346,15 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
                         if (isMounted.current) setCatchingPit(null);
                     }, timeout);
                 await delay(350);
-                if (!isMounted.current) return;
+                if (!isMounted.current || gen !== gameGeneration.current) return;
             }
         }
 
       // Hand empty animation
-      if (!isMounted.current) return;
+      if (!isMounted.current || gen !== gameGeneration.current) return;
       setClusterAnimClass('animate-hand-empty');
       await delay(300);
-      if (!isMounted.current) return;
+      if (!isMounted.current || gen !== gameGeneration.current) return;
       setClusterVisible(false);
       setClusterSeedCount(0);
       setClusterAnimClass('');
@@ -401,9 +407,10 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
               toStore: targetStore,
               player: currentPlayer,
             });
-            seeds.forEach((s) => {
-              setTimeout(() => {
-                if (!isMounted.current) return;
+             seeds.forEach((s) => {
+               setTimeout(() => {
+                 if (gen !== gameGeneration.current) return;
+                 if (!isMounted.current) return;
                 const el = boardRef.current?.querySelector(
                   `[data-capture-seed="${s.id}"]`
                 ) as HTMLElement | null;
@@ -421,6 +428,7 @@ export const MancalaBoard: React.FC<MancalaBoardProps> = ({ variant, onGameEnd }
 
       // Finalize
       if (!isMounted.current) return;
+      if (gen !== gameGeneration.current) return;
       if (finalState.extraTurn) soundFx.playExtraTurn();
       setCaptureAnim({ active: false, seeds: [], fromPits: [], toStore: -1, player: 0 });
       setCaptureGlowPits([]);
